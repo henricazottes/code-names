@@ -45,14 +45,19 @@ module.exports = socket = (io) => {
 
 
   const isTurnOver = (game) => {
-    const users = game.users
     let isOver = true
-    users.map(user => {
-      if(user.team === game.turn && !user.isCaptain && !user.choosedCard) {
-        isOver = false;
+    let choosedCard
+    game.users.map(user => {
+      if(user.team === game.turn && !user.isCaptain) {
+        if (!choosedCard) {
+          choosedCard = user.choosedCard
+        }
+        if (choosedCard !== user.choosedCard) {
+          isOver = false;
+        } else {
+        }
       }
     })
-    console.log("Turn over:", isOver)
     return isOver
   }
 
@@ -61,7 +66,7 @@ module.exports = socket = (io) => {
     const users = game.users
     users.map(user => {
       if(user.team === game.turn) {
-        user.choosedCard = undefined;
+        user.choosedCard = {};
       }
     })
   }
@@ -108,11 +113,10 @@ module.exports = socket = (io) => {
   }
 
   const updateCards = (game, user, socket) => {
-    if(user.isCaptain) {
-      socket.emit('cardsUpdate', game.cards)
-    } else {
-      socket.emit('cardsUpdate', game.shareableCards)      
-    }
+    game.users.map(user => {
+      const cards = user.isCaptain ? game.cards : game.shareableCards
+      io.to(user.socketId).emit('cardsUpdate', cards)
+    })
   }
 
   const newGame = (gameId) => {
@@ -162,7 +166,7 @@ module.exports = socket = (io) => {
       newUser.isCaptain = game.users
         .filter(user => user.team === newUser.team )
         .length === 0
-      
+      newUser.choosedCard = {}
       newUser.socketId  = socket.id
       newUser.isOnline  = true
       game.users.push(newUser)
@@ -252,7 +256,6 @@ module.exports = socket = (io) => {
 }
 
 // TODO
-// - send cards to all when the turn ends (create 2 events, cardsUpdate + shareableCardsUpdate)
 // - card selection
 // - game start/restart
 // - card counter
