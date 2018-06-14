@@ -117,8 +117,16 @@ const getJoinHandler = prefix => () => {
   socket.emit('userConnect', user)
 }
 
+const validOnEnterPressed = prefix => key => {
+  if(key.which === 13)
+    $(`#${prefix}Join`).click()
+}
+
 $('#blueJoin').click(getJoinHandler('blue'))
+$('#blueNameInput').keypress(validOnEnterPressed('blue'))
 $('#orangeJoin').click(getJoinHandler('orange'))
+$('#orangeNameInput').keypress(validOnEnterPressed('orange'))
+
 
 if (local.id !== currentId) {
   storeInfos({id: currentId, user: {}})  
