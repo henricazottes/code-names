@@ -1,0 +1,9 @@
+div(class="ui five column grid")
+  for row in cards
+    div(class="streched row")
+      for card in row
+        div(class="column")
+          div(class="ui card")
+            div(class=`${card.team}-card ${card.isRevealed ? 'revealed' : ''} content game-card` style="text-align: center; font-weight: bold")= card.word.fr
+  div(id="endTurn" class='stretched row'  style="display: none")
+    button(id="endTurnButton" class='ui button blue' style="margin: auto") End turn

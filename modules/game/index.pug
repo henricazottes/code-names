@@ -1,0 +1,12 @@
+extends ../layout
+
+block script
+  script(src='/javascripts/bundle.js')
+
+block content
+  div(id="winnerModal")
+  div(class="ui equal width grid" style="height: 100%")
+    div(class="row" style="height: 100%")
+      div(id="teams" class="four wide column")
+        include components/teams.pug
+      div(id="board" class="column")

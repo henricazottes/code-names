@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}! A web implementation of the cool eponym game :)
+  - const gameId = Math.random().toString(36).substr(2,10);
+  form(action="/game/" + gameId)
+    input(type="submit" class="ui primary button" value="Play!")

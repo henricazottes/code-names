@@ -1,0 +1,17 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #4b4f51;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.blue-team {
+  color: #74b9ff;
+}
+
+.orange-team {
+  color: #ff7675;
+}

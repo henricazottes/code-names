@@ -1,0 +1,32 @@
+div(class="ui card" style="width: 100%")
+  div(class="content")
+    div(class="header" style="text-align: center")
+      span(class="orange-team")
+        i(class="orangeTurn fas fa-arrow-right" style="display: none")
+        = '  Orange Team  '
+        i(class="orangeTurn fas fa-arrow-left" style="display: none")      
+  
+  div(class="content")
+    div(id="orangeTeam" class="ui relaxed divided list")
+
+  div(class="nameInputWrapper extra content")
+    div(class="ui action input")
+      input(id="orangeNameInput" placeholder="Name" type="text")
+      button(class="ui button" id="orangeJoin") Join
+
+div(class="ui card" style="width: 100%")
+  div(class="content")
+    div(class="header blue-team" style="text-align: center")
+      span(class="blue-team")
+        i(class="blueTurn fas fa-arrow-right" style="display: none")
+        = '  Blue Team  '
+        i(class="blueTurn fas fa-arrow-left" style="display: none")
+  
+  div(class="content")
+    div(id="blueTeam" class="ui relaxed divided list")
+
+  div(class="nameInputWrapper extra content")
+    div(class="ui action input")
+      input(id="blueNameInput" placeholder="Name" type="text")
+      button(class="ui button" id="blueJoin") Join
+  
