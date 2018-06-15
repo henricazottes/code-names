@@ -50,22 +50,15 @@ $( document ).ready(function() {
     return card
   }
   
-  
-  socket.on('turnUpdate', turn => {
-    console.log('<== turnUpdate', turn)
-    const updateTurn = () => {
-      console.log("turn", turn)
+  socket.on('turnUpdate', ({turn, delay}) => {
+    console.log('<== turnUpdate', {turn, delay})
+    const updateTurn = (turn) => () => {
       $(`.${turn}Turn`).show()
       $(`.${nextTeam(turn)}Turn`).hide()
       storeInfos({ turn })
       updateCardClickability()
     }
-  
-    if (!local.turn) {
-      updateTurn()
-    } else {
-      setTimeout(updateTurn, 1000)
-    }
+    setTimeout(updateTurn(turn), delay)
   })
   
   socket.on('winnerUpdate', winner => {
@@ -79,8 +72,8 @@ $( document ).ready(function() {
     $('#board').empty().append(boardTemplate({ cards, isCaptain: local.user && local.user.isCaptain }))
     if (!local.user.isCaptain) {
       $('.game-card').click(function(){
-        console.log('==> userChooseCard', $(this).html())
-        socket.emit('userChooseCard', $(this).html())
+        console.log('==> userChooseCard', $(this).children().html())
+        socket.emit('userChooseCard', $(this).children().html())
       })
     }
   
@@ -92,11 +85,12 @@ $( document ).ready(function() {
         row.map((card, j) => {
           if (!local.cards[i][j].isRevealed && card.isRevealed) {
             $(`#word-${card.word.fr}`).animate({'opacity': '0'}, 500, () => {
-              $(`#word-${card.word.fr} > div`).addClass('revealed')
+              $(`#word-${card.word.fr}`).addClass('revealed')
+              $(`#word-${card.word.fr}`).css({'background-color': '', 'color': ''})
               $(`#word-${card.word.fr}`).animate({'opacity': '1'}, 500)
             })
           } else if(cards[i][j].isRevealed) {
-            $(`#word-${card.word.fr} > div`).addClass('revealed')
+            $(`#word-${card.word.fr}`).addClass('revealed')
           }
         })
       })
@@ -104,7 +98,7 @@ $( document ).ready(function() {
       cards.map((row, i) => {
         row.map((card, j) => {
           if(cards[i][j].isRevealed) {
-            $(`#word-${card.word.fr} > div`).addClass('revealed')
+            $(`#word-${card.word.fr}`).addClass('revealed')
           }
         })
       })
@@ -120,7 +114,6 @@ $( document ).ready(function() {
   
   socket.on('usersUpdate', users => {
     console.log('<== usersUpdate', users)
-    users.sort((a, b) => a.name > b.name)
     $(`#blueTeam`).empty()
     $(`#orangeTeam`).empty()
   
@@ -143,6 +136,10 @@ $( document ).ready(function() {
       })
       $(`#${user.team}Team`).append(element)
     })
+
+    if(!local.user.isOnline) {
+      $('.nameInputWrapper').show()
+    }
   
     updateEndTurnVisibility()
     updateCardClickability()

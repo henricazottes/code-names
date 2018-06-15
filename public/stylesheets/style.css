@@ -2,18 +2,102 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: #4b4f51;
+  background-color: #a29bfe;
+}
+
+#board-area {
+  background-color: #bfbaff;
+  border-radius: 5px;
+  padding: 1%;
+}
+
+#board {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.game-card {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.game-card > .content {
+  display: flex;
+  align-items: center;
+}
+
+#teams {
+}
+
+.team-column {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.team-card:first-child {
+  margin-bottom: 1rem;
+}
+
+.team-card {
+  flex: 1;
+}
+
+.team-card > .card {
+  height: 100%;
+  width: 100%;
+}
+.my-name {
+  font-weight: bold;
+}
+
+.nameInputWrapper {
+  display: none;
+}
+
+#endTurn {
+  margin-bottom: 0;
+  margin-top: 1rem;
+}
+
+#endTurnButton {
+  width: 100%;
+}
+
+#start {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
 }
 
 a {
   color: #00B7FF;
 }
 
+.game-card {
+  background-color: white;
+  border-radius: 5px;
+}
+
+.game-card p {
+  text-align: center;
+  width: 100%;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
 .blue-team {
   color: #74b9ff;
+  width: 100%;
 }
 
 .orange-team {
   color: #ff7675;
+  width: 100%;
 }
 
 .blue-card.captain {
@@ -32,22 +116,22 @@ a {
   color: #2d3436;
 }
 
-.card >.blue-card.revealed {
+.blue-card.revealed {
   background-color: #74b9ff;
   color: white;
 }
 
-.card > .orange-card.revealed {
+.orange-card.revealed {
   background-color: #ff7675;
   color: white;
 }
 
-.card > .witness-card.revealed {
+.witness-card.revealed {
   background-color: #fdcb6e;
   color: white;
 }
 
-.card > .looser-card.revealed {
+.looser-card.revealed {
   background-color: #2d3436;
   color: white;
 }

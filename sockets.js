@@ -176,10 +176,11 @@ module.exports = socket = (io) => {
       game.users.push(newUser)
       user = newUser
 
-      console.log('usersUPdate', game.users)
+      console.log('usersUpdate', game.users)
       io.to(gameId).emit('usersUpdate', game.users)
-      console.log('==> turnUpdate', game.turn)
-      socket.emit('turnUpdate', game.turn)
+      const turnUpdate = {turn: game.turn, delay: 0}
+      console.log('==> turnUpdate', turnUpdate)
+      socket.emit('turnUpdate', turnUpdate)
       updateCards(game)
     });
 
@@ -203,8 +204,9 @@ module.exports = socket = (io) => {
         game.users[userIndex].socketId = socket.id
         console.log("==> userUpdate", game.users)
         io.to(gameId).emit('usersUpdate', game.users)
-        console.log("==> turnUpdate", game.turn)
-        socket.emit('turnUpdate', game.turn)
+        const turnUpdate = {turn: game.turn, delay: 0}
+        console.log("==> turnUpdate", turnUpdate)
+        socket.emit('turnUpdate', turnUpdate)
         user = game.users[userIndex]
       }
       updateCards(game)
@@ -217,7 +219,8 @@ module.exports = socket = (io) => {
         game = games[gameId]
         io.to(gameId).emit('usersUpdate', game.users)
         io.to(gameId).emit('cardsUpdate', game.cards)
-        io.to(gameId).emit('turnUpdate', game.turn)
+        const turnUpdate = {turn: game.turn, delay: 0}
+        io.to(gameId).emit('turnUpdate', turnUpdate)
       }
       socket.emit('startGame')
     })
@@ -243,8 +246,9 @@ module.exports = socket = (io) => {
             io.to(gameId).emit('winnerUpdate', game.winner)
           } else if (choosedCard.team !== game.turn) {
             game.turn = nextTeam(game)
-            console.log('==> turnUpate', game.turn)
-            io.to(gameId).emit('turnUpdate', game.turn)
+            const turnUpdate = {turn: game.turn, delay: 1000}
+            console.log('==> turnUpate', turnUpdate)
+            io.to(gameId).emit('turnUpdate', turnUpdate)
           }
         }
         console.log('==> usersUpdate', game.users)
@@ -257,8 +261,9 @@ module.exports = socket = (io) => {
       if (user.team === game.turn && user.isCaptain) {
         game.turn = nextTeam(game)
         resetUserChoosedCard(game)
-          console.log('==> turnUpate', game.turn)
-          io.to(gameId).emit('turnUpdate', game.turn)
+          const turnUpdate = {turn: game.turn, delay: 0}          
+          console.log('==> turnUpdate', turnUpdate)
+          io.to(gameId).emit('turnUpdate', turnUpdate)
           console.log('==> usersUpdate', game.users)
           io.to(gameId).emit('usersUpdate', game.users)
       }
