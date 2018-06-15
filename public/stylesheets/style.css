@@ -15,3 +15,39 @@ a {
 .orange-team {
   color: #ff7675;
 }
+
+.blue-card.captain {
+  color: #74b9ff;
+}
+
+.orange-card.captain {
+  color: #ff7675;
+}
+
+.witness-card.captain {
+  color: #fdcb6e;
+}
+
+.looser-card.captain {
+  color: #2d3436;
+}
+
+.card >.blue-card.revealed {
+  background-color: #74b9ff;
+  color: white;
+}
+
+.card > .orange-card.revealed {
+  background-color: #ff7675;
+  color: white;
+}
+
+.card > .witness-card.revealed {
+  background-color: #fdcb6e;
+  color: white;
+}
+
+.card > .looser-card.revealed {
+  background-color: #2d3436;
+  color: white;
+}
