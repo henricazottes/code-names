@@ -1,6 +1,7 @@
-for row in cards
-  div(class="streched row")
-    for card in row
-      div(class="column")
-        div(id=`word-${card.word.fr}` class=`game-card ${card.team}-card ${isCaptain ? 'captain' : ''}`)
-          p= card.word.fr
+div(class="ui five column grid")
+  for row in cards
+    div(class="streched row")
+      for card in row
+        div(class="column")
+          div(id=`word-${card.word.fr}` class=`game-card ${card.team}-card ${isCaptain ? 'captain' : ''}`)
+            p= card.word.fr

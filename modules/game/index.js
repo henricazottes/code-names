@@ -7,41 +7,45 @@ import isEqual from 'lodash/isEqual'
 
 localStorage.debug = ''
 
+let storage = sessionStorage
+
 $( document ).ready(function() {
   
   const socket = io()
-  const local = JSON.parse(sessionStorage.getItem('local')) || {}
+  const local = JSON.parse(storage.getItem('local')) || {}
   console.log("Local loaded:", {...local})
   const currentId = location.href.split('/').reverse()[0]
   
-  const updateCardClickability = () => {
+  const updateClickability = () => {
+    console.log('On update clickability')
+    debugger
     if (local.turn === local.user.team) {
       if (!local.user.isCaptain) {
         $('.game-card').css('cursor', 'pointer')
       }
-      $('#endTurn > button').prop('disabled', false)
-      $('#endTurn > button').click(() => {
-        console.log('==> userEndTurn')
-        socket.emit('userEndTurn')
-      })
+      console.log("on enable 1")
+      $('#action > button').prop('disabled', false)
     } else {
       $('.game-card').css('cursor', 'default')    
-      $('#endTurn > button').prop('disabled', true)
+      $('#action > button').prop('disabled', true)
+    }
+    const localReady = local.ready || []
+    const localTeam = local.user && local.user.team
+    const localCards = local.cards || []
+    console.log('Locals:', localReady, localTeam, localCards)
+    if(localCards.length === 0 && !localReady.includes(localTeam)) {
+      console.log('On enable !')
+      $('#action > button').prop('disabled', false)
     }
   }
   
-  const updateEndTurnVisibility = () => {
-    if (local.user.isCaptain) {
-      $('#endTurn').show()
-    } else {
-      $('#endTurn').hide()
-    }
+  const updateActionVisibility = () => {
+    
   }
-  
+
   const findCard = (cardName) => {
-    const cards = local.cards
     let card
-    cards.map(col => {
+    local.cards.map(col => {
       col.map(row => {
         if(row.word.fr === cardName)
           card = row
@@ -49,6 +53,52 @@ $( document ).ready(function() {
     })
     return card
   }
+
+  const updateReadyVisibility = () => {
+    $('.team-ready').hide()
+    console.log("local ready:", local.ready)
+    local.ready && local.ready.map(team => {
+      console.log("showing ", team)
+      $(`#${team}Ready`).show()
+      $(`#${team}Ready`).addClass('titi')
+    })
+  }
+
+  const updateActionButton = () => {
+    if(local.user && local.user.isCaptain) {
+      if(local.ready && local.ready.includes(local.user.team) && local.cards && local.cards.length > 0) {
+        $('#actionButton').html('End turn')
+        $('#actionButton').click(() => {
+          console.log('==> userEndTurn')
+          socket.emit('userEndTurn')
+        })
+      } else {
+        $('#actionButton').html('Ready')
+        $('#actionButton').click(() => {
+          console.log('==> userReady')
+          socket.emit('userReady', local.user.team)
+        })
+      }
+      $('#action').show()
+    } else {
+      $('#action').hide()
+    }
+  }
+
+  socket.on('updateReady', ready => {
+    console.log('<== updateReady', ready)
+    storeInfos({ ready })
+    updateReadyVisibility()
+    updateActionButton()
+    updateClickability()
+
+    const localTeam = local.user && local.user.team
+    console.log('localTeam:', localTeam)
+    if (local.ready && !local.ready.includes(localTeam)) {
+      console.log('action enable 3')
+      $('#action > button').prop('disabled', false)
+    }
+  })
   
   socket.on('turnUpdate', ({turn, delay}) => {
     console.log('<== turnUpdate', {turn, delay})
@@ -56,7 +106,7 @@ $( document ).ready(function() {
       $(`.${turn}Turn`).show()
       $(`.${nextTeam(turn)}Turn`).hide()
       storeInfos({ turn })
-      updateCardClickability()
+      updateClickability()
     }
     setTimeout(updateTurn(turn), delay)
   })
@@ -69,16 +119,13 @@ $( document ).ready(function() {
   
   socket.on('cardsUpdate', cards => {
     console.log('<== cardsUpdate', cards)
-    $('#board').empty().append(boardTemplate({ cards, isCaptain: local.user && local.user.isCaptain }))
+    $('#board').empty().append(boardTemplate({ cards, isCaptain: local.user && local.user.isCaptain })).show()
     if (!local.user.isCaptain) {
       $('.game-card').click(function(){
         console.log('==> userChooseCard', $(this).children().html())
         socket.emit('userChooseCard', $(this).children().html())
       })
     }
-  
-    updateCardClickability()
-    updateEndTurnVisibility()
   
     if (local.cards) {
       cards.map((row, i) => {
@@ -103,13 +150,18 @@ $( document ).ready(function() {
         })
       })
     }
-  
     storeInfos({ cards })
+
+    updateClickability()
+    updateActionButton()
   })
   
   socket.on('connect', () => {
     console.log('<== connect')
     storeInfos({ user: { ...local.user, socketId: socket.id } })
+    updateReadyVisibility()
+    updateActionButton()
+    updateClickability()
   })
   
   socket.on('usersUpdate', users => {
@@ -140,14 +192,18 @@ $( document ).ready(function() {
     if(!local.user.isOnline) {
       $('.nameInputWrapper').show()
     }
-  
-    updateEndTurnVisibility()
-    updateCardClickability()
+    
+    updateActionButton()
+    updateClickability()
   })
   
   const storeInfos = infos => {
     Object.keys(infos).map(key => local[key] = infos[key])
-    sessionStorage.setItem('local', JSON.stringify(local))
+    storage.setItem('local', JSON.stringify(local))
+  }
+
+  const clearInfos = () => {
+    storage.setItem('local', {})
   }
   
   const nextTeam = (team) => {
@@ -174,9 +230,13 @@ $( document ).ready(function() {
   $('#orangeNameInput').keypress(validOnEnterPressed('orange'))
   
   
+  
   if (local.id !== currentId) {
+    console.log('Diffrent ID')
+    clearInfos()
     storeInfos({id: currentId, user: {}})  
   } else {
+    console.log('Same ID')
     if (local.user.team) {
       $('.nameInputWrapper').hide()
       console.log('==> userReconnect', local.user.socketId)

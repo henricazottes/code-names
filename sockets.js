@@ -2,6 +2,7 @@ const shuffle = require('lodash/shuffle')
 const range   = require('lodash/range')
 const times   = require('lodash/times')
 const omit   = require('lodash/omit')
+const isEqual   = require('lodash/isEqual')
 const words   = require('./words')
 
 const games = {};
@@ -114,12 +115,31 @@ module.exports = socket = (io) => {
     })
   }
 
-  const updateCards = (game) => {
-    game.users.map(user => {
-      const cards = user.isCaptain ? game.cards : game.shareableCards
-      io.to(user.socketId).emit('cardsUpdate', cards)
-    })
-    console.log('==> cardsUpdate', game.users.length)
+  const checkTeamsReady = (cb, game, user) => {
+    if(isEqual(game.ready.sort(),game.teams.sort())) {
+      cb()
+    } else {
+      console.log('==! teams not ready')
+    }
+  }
+
+  const updateCards = (game, user) => {
+    checkTeamsReady(() => {
+      let cards
+      game.users.map(user => {
+        cards = user.isCaptain ? game.cards : game.shareableCards
+        io.to(user.socketId).emit('cardsUpdate', cards)
+      })
+      console.log('==> cardsUpdate', cards)
+    }, game, user)
+  }
+
+  const updateTurn = (game, user, delay) => {
+    checkTeamsReady(() => {
+      const turnUpdate = {turn: game.turn, delay}
+      console.log("==> turnUpdate", turnUpdate)
+      io.to(user.socketId).emit('turnUpdate', turnUpdate)
+    }, game, user)
   }
 
   const newGame = (gameId) => {
@@ -140,6 +160,8 @@ module.exports = socket = (io) => {
       hasBegan: false,
       turn: firstTeam,
       users: [],
+      ready: [],
+      teams: ['orange','blue'],
       winner: undefined,
       cards,
       shareableCards: shareableCards
@@ -162,7 +184,7 @@ module.exports = socket = (io) => {
     
     console.log("\n\nNew user in channel: ", gameId)
     socket.join(gameId);
-    console.log('usersUpdate', game.users)
+    console.log('==> usersUpdate', game.users)
     socket.emit('usersUpdate', game.users)
     
     socket.on('userConnect', function(newUser){
@@ -176,12 +198,18 @@ module.exports = socket = (io) => {
       game.users.push(newUser)
       user = newUser
 
-      console.log('usersUpdate', game.users)
+      if(!game.teams.includes(newUser.team)) {
+        game.teams.push(newUser.team)
+      }
+
+      console.log('==> usersUpdate', game.users)
       io.to(gameId).emit('usersUpdate', game.users)
-      const turnUpdate = {turn: game.turn, delay: 0}
-      console.log('==> turnUpdate', turnUpdate)
-      socket.emit('turnUpdate', turnUpdate)
-      updateCards(game)
+      console.log('==> updateReady', game.ready)
+      socket.emit('updateReady', game.ready)
+      // const turnUpdate = {turn: game.turn, delay: 0}
+      // console.log('==> turnUpdate', turnUpdate)
+      // socket.emit('turnUpdate', turnUpdate)
+      // updateCards(game)
     });
 
     
@@ -204,32 +232,17 @@ module.exports = socket = (io) => {
         game.users[userIndex].socketId = socket.id
         console.log("==> userUpdate", game.users)
         io.to(gameId).emit('usersUpdate', game.users)
-        const turnUpdate = {turn: game.turn, delay: 0}
-        console.log("==> turnUpdate", turnUpdate)
-        socket.emit('turnUpdate', turnUpdate)
+        updateTurn(game, user, 0)
         user = game.users[userIndex]
       }
-      updateCards(game)
+      updateCards(game, user)
     })
-
-    socket.on('userStartGame', function(){
-      if (!game.hasStarted)
-      if (user.isCaptain) {
-        games[gameId] = newGame(gameId)
-        game = games[gameId]
-        io.to(gameId).emit('usersUpdate', game.users)
-        io.to(gameId).emit('cardsUpdate', game.cards)
-        const turnUpdate = {turn: game.turn, delay: 0}
-        io.to(gameId).emit('turnUpdate', turnUpdate)
-      }
-      socket.emit('startGame')
-    })
-
 
     socket.on('userChooseCard', function(cardName){
       console.log("<== userChooseCard", cardName)
-      if (user.isCaptain)
+      if (user.isCaptain || !game.ready.includes(user.team)) {
         return
+      }
 
       const choosedCard = findCard(cardName, game)
 
@@ -238,7 +251,7 @@ module.exports = socket = (io) => {
 
         if (isTurnOver(game)) { // all players choosed one card
           revealCard(choosedCard, game)
-          updateCards(game, user, socket)
+          updateCards(game, user)
 
           game.winner = checkWinner(choosedCard, game)
           if(game.winner) {
@@ -246,13 +259,25 @@ module.exports = socket = (io) => {
             io.to(gameId).emit('winnerUpdate', game.winner)
           } else if (choosedCard.team !== game.turn) {
             game.turn = nextTeam(game)
-            const turnUpdate = {turn: game.turn, delay: 1000}
-            console.log('==> turnUpate', turnUpdate)
-            io.to(gameId).emit('turnUpdate', turnUpdate)
+            updateTurn(game, user, 1000)
           }
         }
         console.log('==> usersUpdate', game.users)
         io.to(gameId).emit('usersUpdate', game.users)
+      }
+    })
+
+    socket.on('userReady', function(team) {
+      console.log('<== userReady', team)
+      if(!game.ready.includes(team)){
+        game.ready.push(team)
+        console.log('==> updateReady', game.ready)
+        io.to(gameId).emit('updateReady', game.ready)
+        if(game.ready.length === game.teams.length){
+          console.log("==? Start game")
+          updateCards(game, user)
+          updateTurn(game, user, 0)
+        }
       }
     })
 
@@ -261,9 +286,7 @@ module.exports = socket = (io) => {
       if (user.team === game.turn && user.isCaptain) {
         game.turn = nextTeam(game)
         resetUserChoosedCard(game)
-          const turnUpdate = {turn: game.turn, delay: 0}          
-          console.log('==> turnUpdate', turnUpdate)
-          io.to(gameId).emit('turnUpdate', turnUpdate)
+          updateTurn(game, user, 0)
           console.log('==> usersUpdate', game.users)
           io.to(gameId).emit('usersUpdate', game.users)
       }

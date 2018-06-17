@@ -6,6 +6,8 @@ div(class="team-column")
           span(class="orange-team")
             i(class="orangeTurn fas fa-arrow-right" style="display: none")
             = '  Orange Team  '
+            span(id="orangeReady" class="team-ready")
+              i(class="fas fa-check-circle")     
             i(class="orangeTurn fas fa-arrow-left" style="display: none")      
         div(class="description")
           div(id="orangeTeam" class="ui relaxed selection divided list")
@@ -21,7 +23,9 @@ div(class="team-column")
         div(class="header" style="text-align: center")
           span(class="blue-team")
             i(class="blueTurn fas fa-arrow-right" style="display: none")
-            = '  Blue Team  '  
+            = '  Blue Team  '
+            span(id="blueReady" class="team-ready")  
+              i(class="fas fa-check-circle")
             i(class="blueTurn fas fa-arrow-left" style="display: none")
       
         div(class="description")
@@ -33,6 +37,6 @@ div(class="team-column")
           button(class="ui button" id="blueJoin") Join
 
   div(class="row")
-    div(id="endTurn" class='stretched row'  style="display: none")
-      button(id="endTurnButton" class='ui button blue' style="margin: auto") End turn
+    div(id="action" class='stretched row'  style="display: none")
+      button(id="actionButton" class='ui button blue' style="margin: auto")
 

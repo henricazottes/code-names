@@ -12,6 +12,10 @@ body {
 }
 
 #board {
+  display: none;
+}
+
+#board, #board > div {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -58,12 +62,16 @@ body {
   display: none;
 }
 
-#endTurn {
+.team-ready {
+  display: none;
+}
+
+#action {
   margin-bottom: 0;
   margin-top: 1rem;
 }
 
-#endTurnButton {
+#actionButton {
   width: 100%;
 }
 
