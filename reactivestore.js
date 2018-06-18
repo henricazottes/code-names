@@ -4,31 +4,22 @@
  */
 
 module.exports = class ReactiveStore {
-  __update(item, data){
-    $(`[render-${item}]`).each(function(idx){
-      const renderName = $(this).attr(`render-${item}`)
-      let renderedData
-      if(typeof window[renderName] === 'function'){
-        renderedData = window[renderName]({ item: this, data })
-      } else if (renderName === '') {
-        renderedData = data
-      }
-    })
-  }
 
   /**
    * getData() return a data object containing all datas the given selector is
    * watching.
-   * 
-   * @param {string} selector 
+   *
+   * @param {string} selector
    */
   __getData(selector){
     const copy = {}
     const data = Object.entries(this.__store)
       .reduce((acc, [dataName, description]) => {
-        if(description.selector === selector) {
-          acc[dataName] = description.value
-        }
+        description.connections.map(connection => {
+          if(connection.selector === selector) {
+            acc[dataName] = description.value
+          }
+        })
         return acc
       }, {})
     $.extend(true, copy, data)
@@ -36,9 +27,9 @@ module.exports = class ReactiveStore {
   }
 
   /**
-   * updateConnections() call callback of each connection associated to the 
+   * updateConnections() call callback of each connection associated to the
    * updated data.
-   * 
+   *
    */
 
   __updateConnections(dataName) {
@@ -48,23 +39,28 @@ module.exports = class ReactiveStore {
   }
 
   constructor({socket, store = {}, updateHandler }) {
-    this.__socket = socket
-    this.__store = store
-    if (typeof updateHandler === 'function'){
-      this.__updateHandler = updateHandler 
+    if(!$){
+      throw '[ReactiveStore Error]: JQuery not available'
     } else {
-      throw '[ReactiveStore Error]: udpateHandler is not a function'
+      this.__socket = socket
+      this.__store = store
+      if (typeof updateHandler === 'function'){
+        this.__updateHandler = updateHandler
+      } else {
+        throw '[ReactiveStore Error]: udpateHandler is not a function'
+      }
+      this.getStore = () => ({ ...this.__store })
     }
-    this.getStore = () => ({ ...this.__store })
   }
 
   /**
    * bind() a dataName to a websocket event name
-   * 
+   *
    */
-  
+
   bind(bonds){
-    Object.entries(bonds).maps(([dataName, description]) => {
+    Object.entries(bonds).map(([dataName, description]) => {
+      this.__store[dataName] = { connections: [] }
       this.__store[dataName].event = description.event
       this.__store[dataName].value = description.value
       this.__socket.on(`${description.event}`, data => {
@@ -77,22 +73,22 @@ module.exports = class ReactiveStore {
 
   /**
    * connect() updates the list of items affected by a data update.
-   * 
+   *
    * @param {Array<string>} dataNames data the selector is watching
    * @param {string} selector JQuery selector
    * @param {function} cb called when one of the data is updated
    */
   connect(dataNames, selector, cb){
     dataNames.map(dataName => {
-      if(this.__store[dataName].event) {
+      if(this.__store[dataName]) {
         this.__store[dataName].connections.push({
           selector,
           cb
         })
-        
         cb({this: $(selector), data: this.__getData(selector)})
       } else {
-        throw `[ReactiveStore Error]: '${dataName}' not bond yet.`
+        throw `[ReactiveStore Error]: trying to connect '${dataName}' data `
+              + 'which is not bond yet.'
       }
     })
   }

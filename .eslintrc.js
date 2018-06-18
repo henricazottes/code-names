@@ -14,6 +14,9 @@ module.exports = {
             "error",
             "unix"
         ],
+        "no-trailing-spaces": [
+            "error"
+        ],
         "quotes": [
             "error",
             "single"
@@ -21,11 +24,17 @@ module.exports = {
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-console": "off"
     },
     "parserOptions":{
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true
-        }
+        },
+        "sourceType": "module"
+    },
+    "globals": {
+        "$": true,
+        "io": true
     }
 };
