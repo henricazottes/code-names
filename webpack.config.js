@@ -10,7 +10,8 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.pug$/, use: 'pug-loader' }
+      { test: /\.pug$/, use: 'pug-loader' },
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
     ]
   }
 };

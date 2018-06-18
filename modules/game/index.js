@@ -4,6 +4,7 @@ import boardTemplate from './components/board.pug'
 import winnerModal from './components/winnerModal.pug'
 
 import isEqual from 'lodash/isEqual'
+import ReactiveStore from '../../reactivestore.js'
 
 localStorage.debug = ''
 
@@ -11,8 +12,27 @@ $( document ).ready(function() {
   
   const socket = io()
   const local = JSON.parse(sessionStorage.getItem('local')) || {}
-  console.log("Local loaded:", {...local})
+  console.log("Local loaded:", { ...local })
   const currentId = location.href.split('/').reverse()[0]
+
+  const store = new ReactiveStore({
+    socket,
+    updateHandler: (store, dataName) => console.log(`${dataName} updated.`)
+  })
+
+  store.bind(
+    {
+      totos: {
+        event: 'updateTotos',
+        value: []
+      }
+    }
+  )
+
+  store.connect(['totos'], '#totos', ({ selector, data }) => {
+    $(selector).html(data.totos)
+  })
+
   
   const updateCardClickability = () => {
     if (local.turn === local.user.team) {
