@@ -10,23 +10,21 @@ localStorage.debug = ''
 let storage = sessionStorage
 
 $( document ).ready(function() {
-  
+
   const socket = io()
   const local = JSON.parse(storage.getItem('local')) || {}
-  console.log("Local loaded:", {...local})
+  console.log('Local loaded:', {...local})
   const currentId = location.href.split('/').reverse()[0]
-  
+
   const updateClickability = () => {
     console.log('On update clickability')
-    debugger
     if (local.turn === local.user.team) {
       if (!local.user.isCaptain) {
         $('.game-card').css('cursor', 'pointer')
       }
-      console.log("on enable 1")
       $('#action > button').prop('disabled', false)
     } else {
-      $('.game-card').css('cursor', 'default')    
+      $('.game-card').css('cursor', 'default')
       $('#action > button').prop('disabled', true)
     }
     const localReady = local.ready || []
@@ -38,27 +36,12 @@ $( document ).ready(function() {
       $('#action > button').prop('disabled', false)
     }
   }
-  
-  const updateActionVisibility = () => {
-    
-  }
-
-  const findCard = (cardName) => {
-    let card
-    local.cards.map(col => {
-      col.map(row => {
-        if(row.word.fr === cardName)
-          card = row
-      })
-    })
-    return card
-  }
 
   const updateReadyVisibility = () => {
     $('.team-ready').hide()
-    console.log("local ready:", local.ready)
+    console.log('local ready:', local.ready)
     local.ready && local.ready.map(team => {
-      console.log("showing ", team)
+      console.log('showing ', team)
       $(`#${team}Ready`).show()
       $(`#${team}Ready`).addClass('titi')
     })
@@ -99,7 +82,7 @@ $( document ).ready(function() {
       $('#action > button').prop('disabled', false)
     }
   })
-  
+
   socket.on('turnUpdate', ({turn, delay}) => {
     console.log('<== turnUpdate', {turn, delay})
     const updateTurn = (turn) => () => {
@@ -110,13 +93,13 @@ $( document ).ready(function() {
     }
     setTimeout(updateTurn(turn), delay)
   })
-  
+
   socket.on('winnerUpdate', winner => {
     console.log('<== winnerUpdate', winner)
-    $('#winnerModal').append(winnerModal({team: local.user.team, isWinner: winner === local.user.team }))  
+    $('#winnerModal').append(winnerModal({team: local.user.team, isWinner: winner === local.user.team }))
     $('#winnerModal > .modal').modal('show')
   })
-  
+
   socket.on('cardsUpdate', cards => {
     console.log('<== cardsUpdate', cards)
     $('#board').empty().append(boardTemplate({ cards, isCaptain: local.user && local.user.isCaptain })).show()
@@ -126,7 +109,7 @@ $( document ).ready(function() {
         socket.emit('userChooseCard', $(this).children().html())
       })
     }
-  
+
     if (local.cards) {
       cards.map((row, i) => {
         row.map((card, j) => {
@@ -155,7 +138,7 @@ $( document ).ready(function() {
     updateClickability()
     updateActionButton()
   })
-  
+
   socket.on('connect', () => {
     console.log('<== connect')
     storeInfos({ user: { ...local.user, socketId: socket.id } })
@@ -163,13 +146,13 @@ $( document ).ready(function() {
     updateActionButton()
     updateClickability()
   })
-  
+
   socket.on('usersUpdate', users => {
     console.log('<== usersUpdate', users)
-    $(`#blueTeam`).empty()
-    $(`#orangeTeam`).empty()
-  
-    users.map((user, i) => {
+    $('#blueTeam').empty()
+    $('#orangeTeam').empty()
+
+    users.map(user => {
       if (user.socketId === local.user.socketId) {
         const localChoosedCard = local.user.choosedCard || {}
         if (!isEqual(localChoosedCard, user.choosedCard)) {
@@ -192,11 +175,11 @@ $( document ).ready(function() {
     if(!local.user.isOnline) {
       $('.nameInputWrapper').show()
     }
-    
+
     updateActionButton()
     updateClickability()
   })
-  
+
   const storeInfos = infos => {
     Object.keys(infos).map(key => local[key] = infos[key])
     storage.setItem('local', JSON.stringify(local))
@@ -205,11 +188,11 @@ $( document ).ready(function() {
   const clearInfos = () => {
     storage.setItem('local', {})
   }
-  
+
   const nextTeam = (team) => {
     return team === 'blue' ? 'orange' : 'blue'
   }
-  
+
   const getJoinHandler = prefix => () => {
     const name = $(`#${prefix}NameInput`).val()
     const team = prefix === 'blue' ? 'blue' : 'orange'
@@ -218,23 +201,23 @@ $( document ).ready(function() {
     console.log('==> userConnect', user)
     socket.emit('userConnect', user)
   }
-  
+
   const validOnEnterPressed = prefix => key => {
     if(key.which === 13)
       $(`#${prefix}Join`).click()
   }
-  
+
   $('#blueJoin').click(getJoinHandler('blue'))
   $('#blueNameInput').keypress(validOnEnterPressed('blue'))
   $('#orangeJoin').click(getJoinHandler('orange'))
   $('#orangeNameInput').keypress(validOnEnterPressed('orange'))
-  
-  
-  
+
+
+
   if (local.id !== currentId) {
     console.log('Diffrent ID')
     clearInfos()
-    storeInfos({id: currentId, user: {}})  
+    storeInfos({id: currentId, user: {}})
   } else {
     console.log('Same ID')
     if (local.user.team) {
@@ -244,6 +227,6 @@ $( document ).ready(function() {
       storeInfos({ turn: undefined })
     }
   }
-});
+})
 
 

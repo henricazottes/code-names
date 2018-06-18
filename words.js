@@ -1,750 +1,750 @@
 module.exports = [
   {
-    "en": "africa",
-    "fr": "afrique"
+    'en': 'africa',
+    'fr': 'afrique'
   },
   {
-    "en": "agent",
-    "fr": "agen"
+    'en': 'agent',
+    'fr': 'agen'
   },
   {
-  "en": "air",
-  "fr": "air"
+    'en': 'air',
+    'fr': 'air'
   },
   {
-  "en": "alien",
-  "fr": "alien"
+    'en': 'alien',
+    'fr': 'alien'
   },
   {
-  "en": "amazon",
-  "fr": "amazon"
+    'en': 'amazon',
+    'fr': 'amazon'
   },
   {
-  "en": "angel",
-  "fr": "ange"
+    'en': 'angel',
+    'fr': 'ange'
   },
   {
-  "en": "antarctica",
-  "fr": "antartique"
+    'en': 'antarctica',
+    'fr': 'antartique'
   },
   {
-  "en": "apple",
-  "fr": "pomme"
+    'en': 'apple',
+    'fr': 'pomme'
   },
   {
-  "en": "arm",
-  "fr": "bras"
+    'en': 'arm',
+    'fr': 'bras'
   },
   {
-  "en": "back",
-  "fr": "dos"
+    'en': 'back',
+    'fr': 'dos'
   },
   {
-  "en": "band",
-  "fr": "groupe"
+    'en': 'band',
+    'fr': 'groupe'
   },
   {
-  "en": "bank",
-  "fr": "banque"
+    'en': 'bank',
+    'fr': 'banque'
   },
   {
-  "en": "bark",
-  "fr": "aboiement"
+    'en': 'bark',
+    'fr': 'aboiement'
   },
   {
-  "en": "beach",
-  "fr": "plage"
+    'en': 'beach',
+    'fr': 'plage'
   },
   {
-  "en": "belt",
-  "fr": "ceinture"
+    'en': 'belt',
+    'fr': 'ceinture'
   },
   {
-  "en": "berlin",
-  "fr": "berlin"
+    'en': 'berlin',
+    'fr': 'berlin'
   },
   {
-  "en": "berry",
-  "fr": "baie"
+    'en': 'berry',
+    'fr': 'baie'
   },
   {
-  "en": "board",
-  "fr": "bateau"
+    'en': 'board',
+    'fr': 'bateau'
   },
   {
-  "en": "bond",
-  "fr": "joint"
+    'en': 'bond',
+    'fr': 'joint'
   },
   {
-  "en": "boom",
-  "fr": "explosion"
+    'en': 'boom',
+    'fr': 'explosion'
   },
   {
-  "en": "bow",
-  "fr": "arc"
+    'en': 'bow',
+    'fr': 'arc'
   },
   {
-  "en": "box",
-  "fr": "boîte"
+    'en': 'box',
+    'fr': 'boîte'
   },
   {
-  "en": "bug",
-  "fr": "cafard"
+    'en': 'bug',
+    'fr': 'cafard'
   },
   {
-  "en": "canada",
-  "fr": "canada"
+    'en': 'canada',
+    'fr': 'canada'
   },
   {
-  "en": "capital",
-  "fr": "capital"
+    'en': 'capital',
+    'fr': 'capital'
   },
   {
-  "en": "cell",
-  "fr": "cellule"
+    'en': 'cell',
+    'fr': 'cellule'
   },
   {
-  "en": "center",
-  "fr": "centre"
+    'en': 'center',
+    'fr': 'centre'
   },
   {
-  "en": "china",
-  "fr": "chine"
+    'en': 'china',
+    'fr': 'chine'
   },
   {
-  "en": "chocolate",
-  "fr": "chocolat"
+    'en': 'chocolate',
+    'fr': 'chocolat'
   },
   {
-  "en": "circle",
-  "fr": "cercle"
+    'en': 'circle',
+    'fr': 'cercle'
   },
   {
-  "en": "club",
-  "fr": "club"
+    'en': 'club',
+    'fr': 'club'
   },
   {
-  "en": "compound",
-  "fr": "composant"
+    'en': 'compound',
+    'fr': 'composant'
   },
   {
-  "en": "copper",
-  "fr": "cuivre"
+    'en': 'copper',
+    'fr': 'cuivre'
   },
   {
-  "en": "crash",
-  "fr": "accident"
+    'en': 'crash',
+    'fr': 'accident'
   },
   {
-  "en": "cricket",
-  "fr": "cricket"
+    'en': 'cricket',
+    'fr': 'cricket'
   },
   {
-  "en": "cross",
-  "fr": "croix"
+    'en': 'cross',
+    'fr': 'croix'
   },
   {
-  "en": "death",
-  "fr": "mort"
+    'en': 'death',
+    'fr': 'mort'
   },
   {
-  "en": "dice",
-  "fr": "dé"
+    'en': 'dice',
+    'fr': 'dé'
   },
   {
-  "en": "dinosaur",
-  "fr": "dinosaure"
+    'en': 'dinosaur',
+    'fr': 'dinosaure'
   },
   {
-  "en": "doctor",
-  "fr": "docteur"
+    'en': 'doctor',
+    'fr': 'docteur'
   },
   {
-  "en": "dog",
-  "fr": "chien"
+    'en': 'dog',
+    'fr': 'chien'
   },
   {
-  "en": "dress",
-  "fr": "robe"
+    'en': 'dress',
+    'fr': 'robe'
   },
   {
-  "en": "dwarf",
-  "fr": "nain"
+    'en': 'dwarf',
+    'fr': 'nain'
   },
   {
-  "en": "eagle",
-  "fr": "aigle"
+    'en': 'eagle',
+    'fr': 'aigle'
   },
   {
-  "en": "egypt",
-  "fr": "égypte"
+    'en': 'egypt',
+    'fr': 'égypte'
   },
   {
-  "en": "engine",
-  "fr": "moteur"
+    'en': 'engine',
+    'fr': 'moteur'
   },
   {
-  "en": "england",
-  "fr": "angleterre"
+    'en': 'england',
+    'fr': 'angleterre'
   },
   {
-  "en": "europe",
-  "fr": "europe"
+    'en': 'europe',
+    'fr': 'europe'
   },
   {
-  "en": "eye",
-  "fr": "oeil"
+    'en': 'eye',
+    'fr': 'oeil'
   },
   {
-  "en": "fair",
-  "fr": "foire"
+    'en': 'fair',
+    'fr': 'foire'
   },
   {
-  "en": "fall",
-  "fr": "automne"
+    'en': 'fall',
+    'fr': 'automne'
   },
   {
-  "en": "fan",
-  "fr": "fan"
+    'en': 'fan',
+    'fr': 'fan'
   },
   {
-  "en": "field",
-  "fr": "champ"
+    'en': 'field',
+    'fr': 'champ'
   },
   {
-  "en": "file",
-  "fr": "fichier"
+    'en': 'file',
+    'fr': 'fichier'
   },
   {
-  "en": "film",
-  "fr": "film"
+    'en': 'film',
+    'fr': 'film'
   },
   {
-  "en": "fish",
-  "fr": "poisson"
+    'en': 'fish',
+    'fr': 'poisson'
   },
   {
-  "en": "flute",
-  "fr": "flute"
+    'en': 'flute',
+    'fr': 'flute'
   },
   {
-  "en": "fly",
-  "fr": "mouche"
+    'en': 'fly',
+    'fr': 'mouche'
   },
   {
-  "en": "forest",
-  "fr": "forêt"
+    'en': 'forest',
+    'fr': 'forêt'
   },
   {
-  "en": "fork",
-  "fr": "fourchette"
+    'en': 'fork',
+    'fr': 'fourchette'
   },
   {
-  "en": "france",
-  "fr": "france"
+    'en': 'france',
+    'fr': 'france'
   },
   {
-  "en": "gas",
-  "fr": "essence"
+    'en': 'gas',
+    'fr': 'essence'
   },
   {
-  "en": "ghost",
-  "fr": "fantôme"
+    'en': 'ghost',
+    'fr': 'fantôme'
   },
   {
-  "en": "giant",
-  "fr": "géant"
+    'en': 'giant',
+    'fr': 'géant'
   },
   {
-  "en": "glass",
-  "fr": "verre"
+    'en': 'glass',
+    'fr': 'verre'
   },
   {
-  "en": "glove",
-  "fr": "gant"
+    'en': 'glove',
+    'fr': 'gant'
   },
   {
-  "en": "gold",
-  "fr": "or"
+    'en': 'gold',
+    'fr': 'or'
   },
   {
-  "en": "grass",
-  "fr": "herbe"
+    'en': 'grass',
+    'fr': 'herbe'
   },
   {
-  "en": "greece",
-  "fr": "grèce"
+    'en': 'greece',
+    'fr': 'grèce'
   },
   {
-  "en": "green",
-  "fr": "vert"
+    'en': 'green',
+    'fr': 'vert'
   },
   {
-  "en": "ham",
-  "fr": "jambon"
+    'en': 'ham',
+    'fr': 'jambon'
   },
   {
-  "en": "head",
-  "fr": "tête"
+    'en': 'head',
+    'fr': 'tête'
   },
   {
-  "en": "himalaya",
-  "fr": "himalaya"
+    'en': 'himalaya',
+    'fr': 'himalaya'
   },
   {
-  "en": "hole",
-  "fr": "trou"
+    'en': 'hole',
+    'fr': 'trou'
   },
   {
-  "en": "hood",
-  "fr": "capuche"
+    'en': 'hood',
+    'fr': 'capuche'
   },
   {
-  "en": "hook",
-  "fr": "crochet"
+    'en': 'hook',
+    'fr': 'crochet'
   },
   {
-  "en": "human",
-  "fr": "humain"
+    'en': 'human',
+    'fr': 'humain'
   },
   {
-  "en": "horseshoe",
-  "fr": "sabot"
+    'en': 'horseshoe',
+    'fr': 'sabot'
   },
   {
-  "en": "hospital",
-  "fr": "hôpital"
+    'en': 'hospital',
+    'fr': 'hôpital'
   },
   {
-  "en": "hotel",
-  "fr": "hôtel"
+    'en': 'hotel',
+    'fr': 'hôtel'
   },
   {
-  "en": "ice",
-  "fr": "glaçon"
+    'en': 'ice',
+    'fr': 'glaçon'
   },
   {
-  "en": "ice cream",
-  "fr": "glace"
+    'en': 'ice cream',
+    'fr': 'glace'
   },
   {
-  "en": "india",
-  "fr": "inde"
+    'en': 'india',
+    'fr': 'inde'
   },
   {
-  "en": "iron",
-  "fr": "fer"
+    'en': 'iron',
+    'fr': 'fer'
   },
   {
-  "en": "ivory",
-  "fr": "ivoire"
+    'en': 'ivory',
+    'fr': 'ivoire'
   },
   {
-  "en": "jam",
-  "fr": "confiture"
+    'en': 'jam',
+    'fr': 'confiture'
   },
   {
-  "en": "jet",
-  "fr": "jet"
+    'en': 'jet',
+    'fr': 'jet'
   },
   {
-  "en": "jupiter",
-  "fr": "jupiter"
+    'en': 'jupiter',
+    'fr': 'jupiter'
   },
   {
-  "en": "kangaroo",
-  "fr": "kangourou"
+    'en': 'kangaroo',
+    'fr': 'kangourou'
   },
   {
-  "en": "ketchup",
-  "fr": "ketchup"
+    'en': 'ketchup',
+    'fr': 'ketchup'
   },
   {
-  "en": "kid",
-  "fr": "enfant"
+    'en': 'kid',
+    'fr': 'enfant'
   },
   {
-  "en": "king",
-  "fr": "roi"
+    'en': 'king',
+    'fr': 'roi'
   },
   {
-  "en": "kiwi",
-  "fr": "kiwi"
+    'en': 'kiwi',
+    'fr': 'kiwi'
   },
   {
-  "en": "knife",
-  "fr": "couteau"
+    'en': 'knife',
+    'fr': 'couteau'
   },
   {
-  "en": "knight",
-  "fr": "chevalier"
+    'en': 'knight',
+    'fr': 'chevalier'
   },
   {
-  "en": "lab",
-  "fr": "labo"
+    'en': 'lab',
+    'fr': 'labo'
   },
   {
-  "en": "lap",
-  "fr": "genoux"
+    'en': 'lap',
+    'fr': 'genoux'
   },
   {
-  "en": "laser",
-  "fr": "laser"
+    'en': 'laser',
+    'fr': 'laser'
   },
   {
-  "en": "lawyer",
-  "fr": "avocat"
+    'en': 'lawyer',
+    'fr': 'avocat'
   },
   {
-  "en": "lead",
-  "fr": "plomb"
+    'en': 'lead',
+    'fr': 'plomb'
   },
   {
-  "en": "lemon",
-  "fr": "citron"
+    'en': 'lemon',
+    'fr': 'citron'
   },
   {
-  "en": "limousine",
-  "fr": "limousine"
+    'en': 'limousine',
+    'fr': 'limousine'
   },
   {
-  "en": "leadlock",
-  "fr": "boulon"
+    'en': 'leadlock',
+    'fr': 'boulon'
   },
   {
-  "en": "log",
-  "fr": "souche"
+    'en': 'log',
+    'fr': 'souche'
   },
   {
-  "en": "mammoth",
-  "fr": "mammouth"
+    'en': 'mammoth',
+    'fr': 'mammouth'
   },
   {
-  "en": "maple",
-  "fr": "érable"
+    'en': 'maple',
+    'fr': 'érable'
   },
   {
-  "en": "march",
-  "fr": "marche"
+    'en': 'march',
+    'fr': 'marche'
   },
   {
-  "en": "mass",
-  "fr": "masse"
+    'en': 'mass',
+    'fr': 'masse'
   },
   {
-  "en": "mercury",
-  "fr": "mercure"
+    'en': 'mercury',
+    'fr': 'mercure'
   },
   {
-  "en": "millionaire",
-  "fr": "riche"
+    'en': 'millionaire',
+    'fr': 'riche'
   },
   {
-  "en": "model",
-  "fr": "modèle"
+    'en': 'model',
+    'fr': 'modèle'
   },
   {
-  "en": "mole",
-  "fr": "taupe"
+    'en': 'mole',
+    'fr': 'taupe'
   },
   {
-  "en": "moscow",
-  "fr": "moscou"
+    'en': 'moscow',
+    'fr': 'moscou'
   },
   {
-  "en": "mouth",
-  "fr": "bouche"
+    'en': 'mouth',
+    'fr': 'bouche'
   },
   {
-  "en": "mug",
-  "fr": "tasse"
+    'en': 'mug',
+    'fr': 'tasse'
   },
   {
-  "en": "needle",
-  "fr": "aiguille"
+    'en': 'needle',
+    'fr': 'aiguille'
   },
   {
-  "en": "net",
-  "fr": "filet"
+    'en': 'net',
+    'fr': 'filet'
   },
   {
-  "en": "new york",
-  "fr": "new york"
+    'en': 'new york',
+    'fr': 'new york'
   },
   {
-  "en": "night",
-  "fr": "nuit"
+    'en': 'night',
+    'fr': 'nuit'
   },
   {
-  "en": "note",
-  "fr": "note"
+    'en': 'note',
+    'fr': 'note'
   },
   {
-  "en": "novel",
-  "fr": "nouvelle"
+    'en': 'novel',
+    'fr': 'nouvelle'
   },
   {
-  "en": "nurse",
-  "fr": "infirmière"
+    'en': 'nurse',
+    'fr': 'infirmière'
   },
   {
-  "en": "nut",
-  "fr": "noix"
+    'en': 'nut',
+    'fr': 'noix'
   },
   {
-  "en": "oil",
-  "fr": "huile"
+    'en': 'oil',
+    'fr': 'huile'
   },
   {
-  "en": "olive",
-  "fr": "olive"
+    'en': 'olive',
+    'fr': 'olive'
   },
   {
-  "en": "olympus",
-  "fr": "olympe"
+    'en': 'olympus',
+    'fr': 'olympe'
   },
   {
-  "en": "opera",
-  "fr": "opéra"
+    'en': 'opera',
+    'fr': 'opéra'
   },
   {
-  "en": "orange",
-  "fr": "orange"
+    'en': 'orange',
+    'fr': 'orange'
   },
   {
-  "en": "paper",
-  "fr": "papier"
+    'en': 'paper',
+    'fr': 'papier'
   },
   {
-  "en": "park",
-  "fr": "parc"
+    'en': 'park',
+    'fr': 'parc'
   },
   {
-  "en": "part",
-  "fr": "partie"
+    'en': 'part',
+    'fr': 'partie'
   },
   {
-  "en": "paste",
-  "fr": "pâte"
+    'en': 'paste',
+    'fr': 'pâte'
   },
   {
-  "en": "phoenix",
-  "fr": "phénix"
+    'en': 'phoenix',
+    'fr': 'phénix'
   },
   {
-  "en": "piano",
-  "fr": "piano"
+    'en': 'piano',
+    'fr': 'piano'
   },
   {
-  "en": "telescope",
-  "fr": "télescope"
+    'en': 'telescope',
+    'fr': 'télescope'
   },
   {
-  "en": "teacher",
-  "fr": "professeur"
+    'en': 'teacher',
+    'fr': 'professeur'
   },
   {
-  "en": "switch",
-  "fr": "bouton"
+    'en': 'switch',
+    'fr': 'bouton'
   },
   {
-  "en": "swing",
-  "fr": "balançoire"
+    'en': 'swing',
+    'fr': 'balançoire'
   },
   {
-  "en": "sub",
-  "fr": "sous marin"
+    'en': 'sub',
+    'fr': 'sous marin'
   },
   {
-  "en": "stick",
-  "fr": "bâton"
+    'en': 'stick',
+    'fr': 'bâton'
   },
   {
-  "en": "staff",
-  "fr": "équipe"
+    'en': 'staff',
+    'fr': 'équipe'
   },
   {
-  "en": "stadium",
-  "fr": "stade"
+    'en': 'stadium',
+    'fr': 'stade'
   },
   {
-  "en": "sprint",
-  "fr": "sprint"
+    'en': 'sprint',
+    'fr': 'sprint'
   },
   {
-  "en": "spike",
-  "fr": "lance"
+    'en': 'spike',
+    'fr': 'lance'
   },
   {
-  "en": "snowman",
-  "fr": "neige"
+    'en': 'snowman',
+    'fr': 'neige'
   },
   {
-  "en": "slip",
-  "fr": "slip"
+    'en': 'slip',
+    'fr': 'slip'
   },
   {
-  "en": "shot",
-  "fr": "tir"
+    'en': 'shot',
+    'fr': 'tir'
   },
   {
-  "en": "shadow",
-  "fr": "ombre"
+    'en': 'shadow',
+    'fr': 'ombre'
   },
   {
-  "en": "server",
-  "fr": "serveur"
+    'en': 'server',
+    'fr': 'serveur'
   },
   {
-  "en": "ruler",
-  "fr": "règle"
+    'en': 'ruler',
+    'fr': 'règle'
   },
   {
-  "en": "row",
-  "fr": "ligne"
+    'en': 'row',
+    'fr': 'ligne'
   },
   {
-  "en": "rose",
-  "fr": "rose"
+    'en': 'rose',
+    'fr': 'rose'
   },
   {
-  "en": "root",
-  "fr": "racine"
+    'en': 'root',
+    'fr': 'racine'
   },
   {
-  "en": "rome",
-  "fr": "rome"
+    'en': 'rome',
+    'fr': 'rome'
   },
   {
-  "en": "rock",
-  "fr": "pierre"
+    'en': 'rock',
+    'fr': 'pierre'
   },
   {
-  "en": "robot",
-  "fr": "robot"
+    'en': 'robot',
+    'fr': 'robot'
   },
   {
-  "en": "robin",
-  "fr": "merle"
+    'en': 'robin',
+    'fr': 'merle'
   },
   {
-  "en": "revolution",
-  "fr": "révolution"
+    'en': 'revolution',
+    'fr': 'révolution'
   },
   {
-  "en": "rat",
-  "fr": "rat"
+    'en': 'rat',
+    'fr': 'rat'
   },
   {
-  "en": "racket",
-  "fr": "raquette"
+    'en': 'racket',
+    'fr': 'raquette'
   },
   {
-  "en": "queen",
-  "fr": "reine"
+    'en': 'queen',
+    'fr': 'reine'
   },
   {
-  "en": "press",
-  "fr": "presse"
+    'en': 'press',
+    'fr': 'presse'
   },
   {
-  "en": "port",
-  "fr": "port"
+    'en': 'port',
+    'fr': 'port'
   },
   {
-  "en": "pilot",
-  "fr": "pilote"
+    'en': 'pilot',
+    'fr': 'pilote'
   },
   {
-  "en": "time",
-  "fr": "temps"
+    'en': 'time',
+    'fr': 'temps'
   },
   {
-  "en": "tooth",
-  "fr": "dent"
+    'en': 'tooth',
+    'fr': 'dent'
   },
   {
-  "en": "tower",
-  "fr": "tour"
+    'en': 'tower',
+    'fr': 'tour'
   },
   {
-  "en": "truck",
-  "fr": "camion"
+    'en': 'truck',
+    'fr': 'camion'
   },
   {
-  "en": "triangle",
-  "fr": "triangle"
+    'en': 'triangle',
+    'fr': 'triangle'
   },
   {
-  "en": "trip",
-  "fr": "voyage"
+    'en': 'trip',
+    'fr': 'voyage'
   },
   {
-  "en": "turkey",
-  "fr": "dinde"
+    'en': 'turkey',
+    'fr': 'dinde'
   },
   {
-  "en": "undertaker",
-  "fr": "cercueil"
+    'en': 'undertaker',
+    'fr': 'cercueil'
   },
   {
-  "en": "unicorn",
-  "fr": "licorne"
+    'en': 'unicorn',
+    'fr': 'licorne'
   },
   {
-  "en": "vacuum",
-  "fr": "aspirateur"
+    'en': 'vacuum',
+    'fr': 'aspirateur'
   },
   {
-  "en": "van",
-  "fr": "van"
+    'en': 'van',
+    'fr': 'van'
   },
   {
-  "en": "wake",
-  "fr": "vague"
+    'en': 'wake',
+    'fr': 'vague'
   },
   {
-  "en": "wall",
-  "fr": "mur"
+    'en': 'wall',
+    'fr': 'mur'
   },
   {
-  "en": "war",
-  "fr": "guerre"
+    'en': 'war',
+    'fr': 'guerre'
   },
   {
-  "en": "washer",
-  "fr": "lave linge"
+    'en': 'washer',
+    'fr': 'lave linge'
   },
   {
-  "en": "washington",
-  "fr": "paris"
+    'en': 'washington',
+    'fr': 'paris'
   },
   {
-  "en": "water",
-  "fr": "eau"
+    'en': 'water',
+    'fr': 'eau'
   },
   {
-  "en": "wave",
-  "fr": "vague"
+    'en': 'wave',
+    'fr': 'vague'
   },
   {
-  "en": "well",
-  "fr": "puits"
+    'en': 'well',
+    'fr': 'puits'
   },
   {
-  "en": "whale",
-  "fr": "baleine"
+    'en': 'whale',
+    'fr': 'baleine'
   },
   {
-  "en": "whip",
-  "fr": "fouet"
+    'en': 'whip',
+    'fr': 'fouet'
   },
   {
-  "en": "worm",
-  "fr": "ver"
+    'en': 'worm',
+    'fr': 'ver'
   },
   {
-  "en": "yard",
-  "fr": "jardin"
+    'en': 'yard',
+    'fr': 'jardin'
   }
 ]
