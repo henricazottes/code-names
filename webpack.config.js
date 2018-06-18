@@ -11,7 +11,10 @@ module.exports = {
   module: {
     rules: [
       { test: /\.pug$/, use: 'pug-loader' },
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      { test: /\.js$/, exclude: /node_modules/, use: [
+        {loader: "babel-loader" },
+        {loader: "eslint-loader"}
+      ]}
     ]
   }
 };

@@ -25,7 +25,10 @@
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "eslint": "^4.19.1",
+    "eslint-loader": "^2.0.0",
     "nodemon": "^1.17.5",
     "random-words": "^1.1.0",
     "webpack": "^4.12.0",
