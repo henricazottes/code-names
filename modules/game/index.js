@@ -4,6 +4,7 @@ import boardTemplate from './components/board.pug'
 import winnerModal from './components/winnerModal.pug'
 
 import isEqual from 'lodash/isEqual'
+import ReactiveStore from '../../reactivestore.js'
 
 localStorage.debug = ''
 
@@ -11,10 +12,50 @@ let storage = sessionStorage
 
 $( document ).ready(function() {
 
-  const socket = io()
-  const local = JSON.parse(storage.getItem('local')) || {}
   console.log('Local loaded:', {...local})
+  const local = JSON.parse(storage.getItem('local')) || { user: {} }
+  const socket = io()
   const currentId = location.href.split('/').reverse()[0]
+
+  const store = new ReactiveStore({
+    socket,
+    store: local.store,
+    updateHandler: (store, dataName) => {
+      console.log(`<== ${dataName} updated: `, store[dataName].value)
+      storeInfos({ store })
+    }
+  })
+
+  store.bind({
+    users: {
+      event: 'usersUpdate',
+      default: []
+    },
+    user: {
+      event: 'userUpdate',
+      default: {}
+    },
+    cards: {
+      event: 'cardsUpdate',
+      default: []
+    },
+    ready: {
+      event: 'readyUpdate',
+      default: []
+    },
+    turn: {
+      event: 'turnUpdate',
+      default: undefined
+    },
+    winner: {
+      event: 'winnerUpdate',
+      default: ''
+    },
+    teams: {
+      event: 'teamsUpdate',
+      default: []
+    }
+  })
 
   const updateClickability = () => {
     console.log('On update clickability')
@@ -39,7 +80,6 @@ $( document ).ready(function() {
 
   const updateReadyVisibility = () => {
     $('.team-ready').hide()
-    console.log('local ready:', local.ready)
     local.ready && local.ready.map(team => {
       console.log('showing ', team)
       $(`#${team}Ready`).show()
@@ -68,7 +108,34 @@ $( document ).ready(function() {
     }
   }
 
-  socket.on('updateReady', ready => {
+  const storeInfos = infos => {
+    Object.keys(infos).map(key => local[key] = infos[key])
+    storage.setItem('local', JSON.stringify(local))
+  }
+
+  const clearInfos = () => {
+    storage.setItem('local', {})
+  }
+
+  const nextTeam = (team) => {
+    return team === 'blue' ? 'orange' : 'blue'
+  }
+
+  const getJoinHandler = prefix => () => {
+    const name = $(`#${prefix}NameInput`).val()
+    const team = prefix === 'blue' ? 'blue' : 'orange'
+    $('.nameInputWrapper').hide()
+    const user = { name, socketId: socket.id, team }
+    console.log('==> userConnect', user)
+    socket.emit('userConnect', user)
+  }
+
+  const validOnEnterPressed = prefix => key => {
+    if(key.which === 13)
+      $(`#${prefix}Join`).click()
+  }
+
+  socket.on('updateReady2', ready => {
     console.log('<== updateReady', ready)
     storeInfos({ ready })
     updateReadyVisibility()
@@ -83,7 +150,7 @@ $( document ).ready(function() {
     }
   })
 
-  socket.on('turnUpdate', ({turn, delay}) => {
+  socket.on('turnUpdate2', ({turn, delay}) => {
     console.log('<== turnUpdate', {turn, delay})
     const updateTurn = (turn) => () => {
       $(`.${turn}Turn`).show()
@@ -94,13 +161,13 @@ $( document ).ready(function() {
     setTimeout(updateTurn(turn), delay)
   })
 
-  socket.on('winnerUpdate', winner => {
+  socket.on('winnerUpdate2', winner => {
     console.log('<== winnerUpdate', winner)
     $('#winnerModal').append(winnerModal({team: local.user.team, isWinner: winner === local.user.team }))
     $('#winnerModal > .modal').modal('show')
   })
 
-  socket.on('cardsUpdate', cards => {
+  socket.on('cardsUpdate2', cards => {
     console.log('<== cardsUpdate', cards)
     $('#board').empty().append(boardTemplate({ cards, isCaptain: local.user && local.user.isCaptain })).show()
     if (!local.user.isCaptain) {
@@ -139,7 +206,7 @@ $( document ).ready(function() {
     updateActionButton()
   })
 
-  socket.on('connect', () => {
+  socket.on('connect2', () => {
     console.log('<== connect')
     storeInfos({ user: { ...local.user, socketId: socket.id } })
     updateReadyVisibility()
@@ -147,68 +214,80 @@ $( document ).ready(function() {
     updateClickability()
   })
 
-  socket.on('usersUpdate', users => {
-    console.log('<== usersUpdate', users)
+
+  // Update user list
+  store.connect(['users'], ({ store }) => {
     $('#blueTeam').empty()
     $('#orangeTeam').empty()
 
-    users.map(user => {
+    store.users.map(user => {
       if (user.socketId === local.user.socketId) {
-        const localChoosedCard = local.user.choosedCard || {}
-        if (!isEqual(localChoosedCard, user.choosedCard)) {
-          const prevWord = localChoosedCard.word || {}
-          const newWord = user.choosedCard.word || {}
-          $(`#word-${prevWord.fr}`).css({'background-color': '', 'color': ''})
-          $(`#word-${newWord.fr}`).css({'background-color': '#55efc4', 'color': 'white'})
-        }
+        // update local user
         storeInfos({ user })
       }
-      const element = nameLine({
+      const userLine = nameLine({
         name: user.name,
         me: user.socketId === local.user.socketId,
         isOnline: user.isOnline,
         isCaptain: user.isCaptain
       })
-      $(`#${user.team}Team`).append(element)
+      $(`#${user.team}Team`).append(userLine)
     })
 
     if(!local.user.isOnline) {
       $('.nameInputWrapper').show()
     }
-
-    updateActionButton()
-    updateClickability()
   })
 
-  const storeInfos = infos => {
-    Object.keys(infos).map(key => local[key] = infos[key])
-    storage.setItem('local', JSON.stringify(local))
-  }
+  // Update selected card color
+  store.connect(['user'], ({ prev, store }) => {
+    const prevChoosedCard = prev.user.choosedCard || {}
+    const choosedCard = store.user.choosedCard || {}
+    if (!isEqual(prevChoosedCard, choosedCard)) {
+      const prevWord = prevChoosedCard.word || {}
+      const newWord = choosedCard.word || {}
+      $(`#word-${prevWord.fr}`).css({'background-color': '', 'color': ''})
+      $(`#word-${newWord.fr}`).css({'background-color': '#55efc4', 'color': 'white'})
+    }
+  })
 
-  const clearInfos = () => {
-    storage.setItem('local', {})
-  }
+  // socket.on('usersUpdate', users => {
+  //   console.log('<== usersUpdate', users)
+  //   $('#blueTeam').empty()
+  //   $('#orangeTeam').empty()
 
-  const nextTeam = (team) => {
-    return team === 'blue' ? 'orange' : 'blue'
-  }
+  //   users.map(user => {
+  //     if (user.socketId === local.user.socketId) {
+  //       const localChoosedCard = local.user.choosedCard || {}
+  //       if (!isEqual(localChoosedCard, user.choosedCard)) {
+  //         const prevWord = localChoosedCard.word || {}
+  //         const newWord = user.choosedCard.word || {}
+  //         $(`#word-${prevWord.fr}`).css({'background-color': '', 'color': ''})
+  //         $(`#word-${newWord.fr}`).css({'background-color': '#55efc4', 'color': 'white'})
+  //       }
+  //       storeInfos({ user })
+  //     }
+  //     const element = nameLine({
+  //       name: user.name,
+  //       me: user.socketId === local.user.socketId,
+  //       isOnline: user.isOnline,
+  //       isCaptain: user.isCaptain
+  //     })
+  //     $(`#${user.team}Team`).append(element)
+  //   })
 
-  const getJoinHandler = prefix => () => {
-    const name = $(`#${prefix}NameInput`).val()
-    const team = prefix === 'blue' ? 'blue' : 'orange'
-    $('.nameInputWrapper').hide()
-    const user = { name, socketId: socket.id, team }
-    console.log('==> userConnect', user)
-    socket.emit('userConnect', user)
-  }
+  //   if(!local.user.isOnline) {
+  //     $('.nameInputWrapper').show()
+  //   }
 
-  const validOnEnterPressed = prefix => key => {
-    if(key.which === 13)
-      $(`#${prefix}Join`).click()
-  }
+  //   updateActionButton()
+  //   updateClickability()
+  // })
 
+  // Display inputs to join teams
   $('#blueJoin').click(getJoinHandler('blue'))
   $('#blueNameInput').keypress(validOnEnterPressed('blue'))
+
   $('#orangeJoin').click(getJoinHandler('orange'))
   $('#orangeNameInput').keypress(validOnEnterPressed('orange'))
 
@@ -217,13 +296,13 @@ $( document ).ready(function() {
   if (local.id !== currentId) {
     console.log('Diffrent ID')
     clearInfos()
-    storeInfos({id: currentId, user: {}})
+    storeInfos({ id: currentId, user: {} })
   } else {
     console.log('Same ID')
-    if (local.user.team) {
+    if (local.store.user.socketId) {
       $('.nameInputWrapper').hide()
-      console.log('==> userReconnect', local.user.socketId)
-      socket.emit('userReconnect', local.user.socketId)
+      console.log('==> userReconnect', local.store.user.socketId)
+      socket.emit('userReconnect', local.store.user.socketId)
       storeInfos({ turn: undefined })
     }
   }

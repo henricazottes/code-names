@@ -202,6 +202,8 @@ module.exports = (io) => {
 
       console.log('==> usersUpdate', game.users)
       io.to(gameId).emit('usersUpdate', game.users)
+      console.log('==> userUpdate', newUser)
+      socket.emit('userUpdate', newUser)
       const turnUpdate = {turn: game.turn, delay: 0}
       console.log('==> turnUpdate', turnUpdate)
       socket.emit('turnUpdate', turnUpdate)
@@ -259,6 +261,8 @@ module.exports = (io) => {
 
       if (user.team === game.turn && !choosedCard.isRevealed) {
         user.choosedCard = choosedCard
+        console.log('==> userUpdate', user)
+        socket.emit('userUpdate', user)
 
         if (isTurnOver(game)) { // all players choosed one card
           revealCard(choosedCard, game)
