@@ -124,7 +124,9 @@ $( document ).ready(function() {
   })
 
   store.connect(['ready'], ({ store }) => {
-    // Add ready icon
+    if(store.playing) {
+      return
+    }
     $('.team-ready').hide()
     store.ready.map(team => {
       $(`#${team}Ready`).show()
@@ -158,14 +160,38 @@ $( document ).ready(function() {
 
   store.connect(['winner'], ({ store }) => {
     if(store.winner) {
-      $('#winnerModal').append(winnerModal({team: store.user.team, isWinner: store.winner === store.user.team }))
-      $('#winnerModal > .modal').modal('show')
-      $('.turnSelector').hide()
+      $('#winnerModal').append(winnerModal({
+        team: store.user.team,
+        isWinner: store.winner === store.user.team
+      }))
+      setTimeout(() => {
+        $('#winnerModal > .modal').modal('show')
+        $('.turnSelector').hide()
+      }, 1000)
     }
   })
 
   store.connect(['cards'], ({ store, prev }) => {
-    $('#board').empty().append(boardTemplate({ cards: store.cards, isCaptain: store.user.isCaptain })).show()
+    $('#board').empty().append(boardTemplate({
+      cards: store.cards,
+      isCaptain: store.user.isCaptain
+    }))
+    if (!prev.cards[0]
+      || prev.cards[0][0].word.fr !== store.cards[0][0].word.fr) {
+      $('.game-card').css('opacity', '0')
+      $('.game-card').animate({'opacity': '1'}, 1000)
+      // Progressive animation
+      // store.cards.map((row, i) => {
+      //   row.map((card, j) => {
+      //     setTimeout(() => {
+      //       $(`#word-${card.word.fr.replace(/ /g, '')}`)
+      //         .animate({'opacity': '1'}, 600)
+      //     }, i*100 + j*(100/store.cards[0].length))
+      //   })
+      // })
+    }
+    $('#board').show()
+
     if (!store.user.isCaptain) {
       $('.game-card').click(function(){
         console.log('==> userChooseCard', $(this).children().html())

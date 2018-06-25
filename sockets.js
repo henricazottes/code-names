@@ -142,19 +142,21 @@ module.exports = (io) => {
   }
 
   const updateCards = (game, socketId) => {
+    console.log('socket id:', socketId)
     let cards
     const sendCardsTo = (socketId, user) => {
-      cards = user && user.isCaptain ? game.cards : game.shareableCards
+      cards = (user && user.isCaptain) ? game.cards : game.shareableCards
       io.to(socketId).emit('cardsUpdate', cards)
     }
     if (socketId) {
-      sendCardsTo(socketId)
+      const user = game.users.find(user => user.socketId === socketId)
+      sendCardsTo(socketId, user)
     } else {
       game.users.map(user => {
         sendCardsTo(user.socketId, user)
       })
     }
-    console.log('==> cardsUpdate', cards)
+    console.log('==> cardsUpdate', cards.length)
   }
 
   const updateTurn = (game, socketId, delay) => {
@@ -180,7 +182,7 @@ module.exports = (io) => {
   }
 
   const updateWinner = (game, socketId) => {
-    console.log('==> winnerUpdate', game.winner)
+    console.log('==> winnerUpdate', game.winner, game.playing)
     if(socketId) {
       io.to(socketId).emit('winnerUpdate', game.winner)
     } else {
@@ -192,6 +194,7 @@ module.exports = (io) => {
     // Order is important
     updateUser(game, user.socketId)
     updateUsers(game, user.socketId)
+    updateWinner(game, user.socketId)
     updateReady(game, user.socketId)
     updatePlaying(game, user.socketId)
     if(teamsAreReady(game)) {
@@ -328,9 +331,9 @@ module.exports = (io) => {
         if(teamsAreReady(game)){
           console.log('==? Start game')
           game.playing = true
+          updatePlaying(game)
           updateCards(game)
           updateTurn(game)
-          updatePlaying(game)
         }
       }
     })
