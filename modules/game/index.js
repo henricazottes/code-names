@@ -78,8 +78,8 @@ $( document ).ready(function() {
       event: 'teamsUpdate',
       default: []
     },
-    started: {
-      event: 'startedUpdate',
+    playing: {
+      event: 'playingUpdate',
       default: false
     }
   })
@@ -105,9 +105,9 @@ $( document ).ready(function() {
       $(`#${prefix}Join`).click()
   }
 
-  store.connect(['started'], ({ store }) => {
+  store.connect(['playing'], ({ store }) => {
     $('#actionButton').off('click')
-    if(store.started) {
+    if(store.playing) {
       $('.team-ready').hide()
       $('#actionButton').html('End turn')
       $('#actionButton').click(() => {
@@ -137,6 +137,9 @@ $( document ).ready(function() {
   })
 
   store.connect(['turn'], ({ store }) => {
+    if(!store.playing) {
+      return
+    }
     const updateTurn = (turn) => () => {
       $(`.${turn}Turn`).show()
       $(`.${nextTeam(turn)}Turn`).hide()
@@ -154,9 +157,10 @@ $( document ).ready(function() {
   })
 
   store.connect(['winner'], ({ store }) => {
-    if(store.started) {
+    if(store.winner) {
       $('#winnerModal').append(winnerModal({team: store.user.team, isWinner: store.winner === store.user.team }))
       $('#winnerModal > .modal').modal('show')
+      $('.turnSelector').hide()
     }
   })
 
@@ -173,13 +177,17 @@ $( document ).ready(function() {
       prev.cards.map((row, i) => {
         row.map((card, j) => {
           if (!card.isRevealed && store.cards[i][j].isRevealed) {
-            $(`#word-${card.word.fr}`).animate({'opacity': '0'}, 500, () => {
-              $(`#word-${card.word.fr}`).addClass('revealed')
-              $(`#word-${card.word.fr}`).css({'background-color': '', 'color': ''})
-              $(`#word-${card.word.fr}`).animate({'opacity': '1'}, 500)
-            })
+            $(`#word-${card.word.fr.replace(/ /g, '')}`)
+              .animate({'opacity': '0'}, 500, () => {
+                $(`#word-${card.word.fr.replace(/ /g, '')}`)
+                  .addClass('revealed')
+                $(`#word-${card.word.fr.replace(/ /g, '')}`)
+                  .css({'background-color': '', 'color': ''})
+                $(`#word-${card.word.fr.replace(/ /g, '')}`)
+                  .animate({'opacity': '1'}, 500)
+              })
           } else if(store.cards[i][j].isRevealed) {
-            $(`#word-${card.word.fr}`).addClass('revealed')
+            $(`#word-${card.word.fr.replace(/ /g, '')}`).addClass('revealed')
           }
         })
       })
@@ -187,7 +195,7 @@ $( document ).ready(function() {
       store.cards.map((row, i) => {
         row.map((card, j) => {
           if(store.cards[i][j].isRevealed) {
-            $(`#word-${card.word.fr}`).addClass('revealed')
+            $(`#word-${card.word.fr.replace(/ /g, '')}`).addClass('revealed')
           }
         })
       })

@@ -117,39 +117,86 @@ module.exports = (io) => {
     return (isEqual(game.ready.sort(), game.teams.sort()))
   }
 
-  const checkTeamsReady = (cb, game) => {
-    if(isEqual(game.ready.sort(), game.teams.sort())) {
-      cb()
+  const updateUsers = (game, socketId) => {
+    console.log('==> usersUpdate', game.users)
+    if (socketId) {
+      io.to(socketId).emit('usersUpdate', game.users)
     } else {
-      console.log('==! teams not ready')
+      io.to(game.id).emit('usersUpdate', game.users)
     }
   }
 
-  const updateCards = (game, user) => {
-    checkTeamsReady(() => {
-      let cards
-      game.users.map(user => {
-        cards = user.isCaptain ? game.cards : game.shareableCards
-        io.to(user.socketId).emit('cardsUpdate', cards)
-      })
-      console.log('==> cardsUpdate', cards)
-    }, game, user)
+  const updateUser = (game, socketId) => {
+    const user = game.users.find(user => user.socketId === socketId)
+    console.log('==> userUpdate', user)
+    io.to(socketId).emit('userUpdate', user)
   }
 
-  const updateTurn = (game, user, delay) => {
-    checkTeamsReady(() => {
-      const turnUpdate = {turn: game.turn, delay}
-      console.log('==> turnUpdate', turnUpdate)
-      io.to(game.id).emit('turnUpdate', turnUpdate)
-    }, game, user)
-  }
-
-  const updateStarted = (game, user) => {
-    console.log('==> startedUpdate', game.started)
-    if(user) {
-      io.to(user.socketId).emit('startedUpdate', game.started)
+  const updateReady = (game, socketId) => {
+    console.log('==> readyUpdate', game.ready)
+    if (socketId) {
+      io.to(socketId).emit('readyUpdate', game.ready)
     } else {
-      io.to(game.id).emit('startedUpdate', game.started)
+      io.to(game.id).emit('readyUpdate', game.ready)
+    }
+  }
+
+  const updateCards = (game, socketId) => {
+    let cards
+    const sendCardsTo = (socketId, user) => {
+      cards = user && user.isCaptain ? game.cards : game.shareableCards
+      io.to(socketId).emit('cardsUpdate', cards)
+    }
+    if (socketId) {
+      sendCardsTo(socketId)
+    } else {
+      game.users.map(user => {
+        sendCardsTo(user.socketId, user)
+      })
+    }
+    console.log('==> cardsUpdate', cards)
+  }
+
+  const updateTurn = (game, socketId, delay) => {
+    // Handle [socketId] parameter
+    const newDelay = delay ? delay : socketId
+    const newSocketId = socketId && delay ? socketId : undefined
+    const turnUpdate = {turn: game.turn, delay: newDelay}
+    console.log('==> turnUpdate', turnUpdate)
+    if(newSocketId) {
+      io.to(newSocketId).emit('turnUpdate', turnUpdate)
+    } else {
+      io.to(game.id).emit('turnUpdate', turnUpdate)
+    }
+  }
+
+  const updatePlaying = (game, socketId) => {
+    console.log('==> playingUpdate', game.playing)
+    if(socketId) {
+      io.to(socketId).emit('playingUpdate', game.playing)
+    } else {
+      io.to(game.id).emit('playingUpdate', game.playing)
+    }
+  }
+
+  const updateWinner = (game, socketId) => {
+    console.log('==> winnerUpdate', game.winner)
+    if(socketId) {
+      io.to(socketId).emit('winnerUpdate', game.winner)
+    } else {
+      io.to(game.id).emit('winnerUpdate', game.winner)
+    }
+  }
+
+  const initialUpdate = (game, user) => {
+    // Order is important
+    updateUser(game, user.socketId)
+    updateUsers(game, user.socketId)
+    updateReady(game, user.socketId)
+    updatePlaying(game, user.socketId)
+    if(teamsAreReady(game)) {
+      updateCards(game, user.socketId)
+      updateTurn(game, user.socketId, 0)
     }
   }
 
@@ -178,7 +225,7 @@ module.exports = (io) => {
 
     return {
       id: gameId,
-      started: false,
+      playing: false,
       turn: firstTeam,
       users: [],
       ready: [],
@@ -187,6 +234,12 @@ module.exports = (io) => {
       cards,
       shareableCards: shareableCards
     }
+  }
+
+  const restartedGame = game => {
+    const _game = newGame(game.id)
+    _game.users = game.users
+    return _game
   }
 
   /**
@@ -205,26 +258,14 @@ module.exports = (io) => {
 
     console.log('\n\nNew user in channel: ', gameId)
     socket.join(gameId)
-    console.log('usersUpdate', game.users)
-    socket.emit('usersUpdate', game.users)
+    updateUsers(game, socket.id)
 
     socket.on('userConnect', function(userInfos){
       console.log('<== userConnect:', userInfos)
       user = createUser(game, userInfos)
       game.users.push(user)
-
-      console.log('==> userUpdate', user)
-      socket.emit('userUpdate', user)
-
-      console.log('==> usersUpdate', game.users)
-      io.to(gameId).emit('usersUpdate', game.users)
-
-      console.log('==> readyUpdate', game.ready)
-      socket.emit('readyUpdate', game.ready)
-
-      updateStarted(game, user)
-      updateCards(game)
-      updateTurn(game, user, 0)
+      updateUsers(game)
+      initialUpdate(game, user)
     })
 
 
@@ -246,19 +287,7 @@ module.exports = (io) => {
         user = game.users[userIndex]
         game.users[userIndex].isOnline = true
         game.users[userIndex].socketId = socket.id
-
-        console.log('==> userUpdate', user)
-        socket.emit('userUpdate', user)
-
-        console.log('==> usersUpdate', game.users)
-        io.to(gameId).emit('usersUpdate', game.users)
-
-        console.log('==> startedUpdate', game.started)
-        socket.emit('startedUpdate', game.started)
-
-        updateStarted(game, user)
-        updateCards(game, user)
-        updateTurn(game, user, 0)
+        initialUpdate(game, user)
       }
     })
 
@@ -268,28 +297,26 @@ module.exports = (io) => {
       if (user.isCaptain){
         return
       }
-
       const choosedCard = findCard(cardName, game)
-
       if (user.team === game.turn && !choosedCard.isRevealed) {
         user.choosedCard = choosedCard
         if (isTurnOver(game)) { // all players choosed one card
           updateShareableCards(choosedCard, game)
-          updateCards(game, user)
-
+          updateCards(game)
           game.winner = checkWinner(choosedCard, game)
           if(game.winner) {
-            console.log('==> winnerUpdate', game.winner)
-            io.to(gameId).emit('winnerUpdate', game.winner)
+            updateWinner(game)
+            resetUserChoosedCard(game)
+            games[gameId] = restartedGame(game)
+            Object.assign(game, games[gameId])
+            game.users.map(user => initialUpdate(game, user))
           } else if (choosedCard.team !== game.turn) {
             game.turn = nextTeam(game)
-            updateTurn(game, user, 1000)
+            updateTurn(game, 1000)
           }
         }
-        console.log('==> userUpdate', user)
-        socket.emit('userUpdate', user)
-        console.log('==> usersUpdate', game.users)
-        io.to(gameId).emit('usersUpdate', game.users)
+        updateUser(game, user.socketId)
+        updateUsers(game)
       }
     })
 
@@ -297,16 +324,13 @@ module.exports = (io) => {
       console.log('<== userReady')
       if(!game.ready.includes(user.team)){
         game.ready.push(user.team)
-        console.log('==> readyUpdate', game.ready)
-        io.to(gameId).emit('readyUpdate', game.ready)
+        updateReady(game)
         if(teamsAreReady(game)){
           console.log('==? Start game')
-          game.started = true
-          updateCards(game, user)
-          const turnUpdate = {turn: game.turn, delay: 0}
-          console.log('==> turnUpdate', turnUpdate)
-          io.to(gameId).emit('turnUpdate', turnUpdate)
-          updateStarted(game)
+          game.playing = true
+          updateCards(game)
+          updateTurn(game)
+          updatePlaying(game)
         }
       }
     })
@@ -317,11 +341,8 @@ module.exports = (io) => {
       if (user.team === game.turn && user.isCaptain) {
         game.turn = nextTeam(game)
         resetUserChoosedCard(game)
-        const turnUpdate = {turn: game.turn, delay: 0}
-        console.log('==> turnUpdate', turnUpdate)
-        io.to(gameId).emit('turnUpdate', turnUpdate)
-        console.log('==> usersUpdate', game.users)
-        io.to(gameId).emit('usersUpdate', game.users)
+        updateTurn(game)
+        updateUsers(game)
       }
     })
   })

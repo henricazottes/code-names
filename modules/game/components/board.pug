@@ -3,5 +3,5 @@ div(class="ui five column grid")
     div(class="streched row")
       for card in row
         div(class="column")
-          div(id=`word-${card.word.fr}` class=`game-card ${card.team}-card ${isCaptain ? 'captain' : ''}`)
+          div(id=`word-${card.word.fr.replace(/ /g, '')}` class=`game-card ${card.team}-card ${isCaptain ? 'captain' : ''}`)
             p= card.word.fr
