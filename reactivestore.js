@@ -43,8 +43,12 @@ module.exports = class ReactiveStore {
       this.__socket = socket
       this.__store = {}
       this.__prevStore = {}
-      $.extend(true, this.__store, store)
-      $.extend(true, this.__prevStore, store)
+      let buffer = {}
+      $.extend(true, buffer, store)
+      Object.entries(buffer).map(([dataName, value]) => {
+        this.__store[dataName] = { value }
+      })
+      $.extend(true, this.__prevStore, this.__store)
       if (typeof updateHandler === 'function'){
         this.__updateHandler = updateHandler
       } else {
@@ -52,7 +56,7 @@ module.exports = class ReactiveStore {
       }
       this.getStore = () => {
         const store = {}
-        $.extend(true, store, this.__store)
+        $.extend(true, store, this.__getPublicStoreCopy(this.__store))
         return store
       }
     }
@@ -65,9 +69,14 @@ module.exports = class ReactiveStore {
 
   bind(bonds){
     Object.entries(bonds).map(([dataName, description]) => {
-      this.__store[dataName] = { connections: [] }
+      this.__store[dataName] = {
+        connections: [],
+        event: description.event,
+        value: this.__store[dataName]
+          ? this.__store[dataName].value
+          : undefined
+      }
       this.__prevStore[dataName] = {}
-      this.__store[dataName].event = description.event
 
       // Priority to the loaded store, not to the default value
       if(!this.__store[dataName].value) {
@@ -94,8 +103,8 @@ module.exports = class ReactiveStore {
       if(this.__store[dataName]) {
         this.__store[dataName].connections.push(cb)
         cb({
-          prev: this.__getPublicStoreCopy(this.__prevStore, 'prev'),
-          store: this.__getPublicStoreCopy(this.__store, 'new')
+          prev: this.__getPublicStoreCopy(this.__prevStore),
+          store: this.__getPublicStoreCopy(this.__store)
         })
       } else {
         throw `[ReactiveStore Error]: trying to connect '${dataName}' data `
