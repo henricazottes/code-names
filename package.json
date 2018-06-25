@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "serve": "DEBUG=myapp:* npm-run-all -p build start",
-    "build": "webpack --watch --mode=development",
-    "poststart": "echo 'coucou'"
+    "serve": "DEBUG=myapp:* npm-run-all -p build-dev start",
+    "build": "webpack",
+    "build-dev": "webpack --watch --mode=development"
   },
   "dependencies": {
     "concurrently": "^3.5.1",

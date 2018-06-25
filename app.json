@@ -1,0 +1,13 @@
+{
+  "name": "Code Names",
+  "description": "A web implementation of the board game.",
+  "logo": "https://i72.servimg.com/u/f72/13/84/06/30/logo11.png",
+  "repository": "https://github.com/henricazottes/code-names.git",
+  "success_url": "/",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}
