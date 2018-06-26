@@ -101,8 +101,10 @@ $( document ).ready(function() {
   }
 
   const validOnEnterPressed = prefix => key => {
-    if(key.which === 13)
+    const length = $(`#${prefix}NameInput`).val().length
+    if(key.which === 13 && length > 0 && length < 15) {
       $(`#${prefix}Join`).click()
+    }
   }
 
   store.connect(['playing'], ({ store }) => {

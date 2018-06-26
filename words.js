@@ -5,7 +5,7 @@ module.exports = [
   },
   {
     'en': 'agent',
-    'fr': 'agen'
+    'fr': 'agent'
   },
   {
     'en': 'air',
@@ -17,7 +17,7 @@ module.exports = [
   },
   {
     'en': 'amazon',
-    'fr': 'amazon'
+    'fr': 'amazone'
   },
   {
     'en': 'angel',
