@@ -1,13 +1,14 @@
 extends ../layout
 
 block script
-  script(src='/javascripts/bundle.js')
+  script(src='/javascripts/game.js')
 
 block content
   div(id="winnerModal")
-  div(class="ui two column grid" style="height: 100%")
-    div(class="row" style="height: 100%")
-      div(id="teams" class="four wide column")
-        include components/teams.pug
-      div(id="board-area" class="twelve wide column")
-        div(id="board")
+  div(id="flex-wrapper" style="height: 100%")
+    div(id="teams" class="flex-column")
+      include components/teams.pug
+    div(id="board-area" class="flex-column")
+      div(id="board")
+    div(id="chat" class="flex-column")
+      p Chat coming soon...

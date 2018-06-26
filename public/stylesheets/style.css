@@ -1,8 +1,86 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: #4b4f51;
   background-color: #a29bfe;
+}
+
+#teams {
+  flex: 1;
+  max-width: 300px;
+  min-width: 300px;
+}
+
+#chat {
+  flex: 1;
+  max-width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#board-area {
+  flex: 3
+}
+
+.flex-column {
+  margin: 1.2em;
+}
+
+#flex-wrapper {
+  display: flex;
+  height: 100%;
+}
+
+#flex-wrapper.column {
+  flex-flow: column;
+}
+
+#background-white {
+  background-color: white;
+}
+
+#home-content {
+  flex: auto;
+}
+
+#title {
+  font-size: 2em;
+  color: white;
+}
+
+#header {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#roomForm {
+  text-align: center;
+}
+
+.ui.header.custom-grey {
+  color: rgb(75, 75, 75);
+}
+
+#left-header {
+  align-items: center;
+  display: flex;
+}
+
+#footer {
+  text-align: center;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#header, #footer {
+  flex: initial;
+}
+
+#home-content {
+  padding: 20px 0 20px 0;
+  background-color: white;
 }
 
 #board-area {

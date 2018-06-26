@@ -1,8 +1,54 @@
 extends ../layout
 
+block script
+  script(src='/javascripts/home.js')
+  script(async defer src="https://buttons.github.io/buttons.js")
+
 block content
-  h1= title
-  p Welcome to #{title}! A web implementation of the cool eponym game :)
-  - const gameId = Math.random().toString(36).substr(2,10);
-  form(action="/game/" + gameId)
-    input(type="submit" class="ui primary button" value="Play!")
+  div(id="flex-wrapper" class="column")
+    div(id='header' class="ui text container")
+      div(id="left-header")
+        img(src='images/logo.png' width=60 height=60)
+        span(id="title") &nbsp; Code Names
+      div(id="right-header")
+        img(src="images/github-mark.png" height=28 width=28)
+        a(class="github-button"
+          href="https://github.com/henricazottes/code-names"
+          data-icon="octicon-star"
+          data-size="large"
+          data-show-count="true"
+          aria-label="Star henricazottes/code-names on GitHub") Star
+
+    div(id="home-content")
+      div(class="ui text container")
+        br
+        br
+        h2(class="ui header custom-grey") 🏓 Play
+        div(class="ui divider")
+        h3(class="ui header custom-grey") Create a room
+        form(id="roomForm" action="")
+          div(class="ui action input")
+            input(id="roomId" type="text")
+            button(type="submit" class="ui primary button") Join
+
+        h3(class="ui header custom-grey") Join a public room
+        p Coming soon...
+
+        h2(class="ui header custom-grey") 📕 Rules
+        div(class="ui divider")
+        p.
+          You can find rules in multiple langages on the
+          #[a(href="https://czechgames.com/en/codenames/downloads/") official website]
+
+        h2(class="ui header custom-grey") ❓ About
+        div(class="ui divider")
+        p.
+          This website is a project I made initialy to play with websockets. It's
+          an unnofficial implementation of the board game CodeNames. Since the game
+          wasn't available online (they are #[a(href="http://codenamesgame.com/") working on it]) I decided to create my version :)
+
+    div(class="ui divider")
+    div(id="footer" class="ui text container")
+      a(href="http://bmc.xyz/l/0hrqWdAuV")
+        img(src="images/buy-me-a-coffee.svg" alt="buy me a coffee image link")
+
