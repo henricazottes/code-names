@@ -80,6 +80,10 @@ $( document ).ready(function() {
     playing: {
       event: 'playingUpdate',
       default: false
+    },
+    access: {
+      event: 'accessUpdate',
+      default: undefined
     }
   })
 
@@ -99,22 +103,25 @@ $( document ).ready(function() {
     socket.emit('userConnect', user)
   }
 
-  const validOnEnterPressed = prefix => key => {
-    const length = $(`#${prefix}NameInput`).val().length
+  const validOnEnterPressed = ({ inputSelector, buttonSelector }) => key => {
+    const length = $(inputSelector).val().length
     if(key.which === 13 && length > 0 && length < 15) {
-      $(`#${prefix}Join`).click()
+      $(buttonSelector).click()
     }
   }
 
-  store.connect(['user'], ({ store }) => {
-    switch (store.user.access) {
+  store.connect(['access'], ({ store }) => {
+    switch (store.access) {
       case 'pending':
         // Display password prompt
+        $('#passwordModal').modal({closable: false}).modal('show')
         break
       case 'denied':
         // Display denied message
+        $('#errorMessage').show()
         break
-      case 'authorized':
+      case 'granted':
+        $('#passwordModal').modal('hide')
         break
     }
   })
@@ -295,10 +302,26 @@ $( document ).ready(function() {
 
   // Display inputs to join teams
   $('#blueJoin').click(getJoinHandler('blue'))
-  $('#blueNameInput').keypress(validOnEnterPressed('blue'))
+  $('#blueNameInput').keypress(validOnEnterPressed({
+    inputSelector: '#blueNameInput',
+    buttonSelector: '#blueJoin'
+  }))
 
   $('#orangeJoin').click(getJoinHandler('orange'))
-  $('#orangeNameInput').keypress(validOnEnterPressed('orange'))
+  $('#orangeNameInput').keypress(validOnEnterPressed({
+    inputSelector: '#orangeNameInput',
+    buttonSelector: '#orangeJoin'
+  }))
+
+  $('#passwordModal > div > button').on('click', function(){
+    $('#errorMessage').hide()
+    socket.emit('userLogin', $('#passwordModal > div > input').val())
+  })
+
+  $('#passwordModal > div > input').keypress(validOnEnterPressed({
+    inputSelector: '#passwordModal > div > input',
+    buttonSelector: '#passwordModal > div > button'
+  }))
 })
 
 

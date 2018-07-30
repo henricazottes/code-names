@@ -18,6 +18,15 @@ body {
   align-items: center;
 }
 
+#passwordModal {
+  padding: 20px;
+}
+
+#errorMessage {
+  display: none;
+  color: #ff7675;
+}
+
 .private-key {
   text-align: center;
   color: #4b4f51;

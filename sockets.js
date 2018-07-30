@@ -280,18 +280,47 @@ module.exports = (io) => {
       }
 
       let game = games[gameId]
-      let user = {}
+      let user = game.users.find(user => user.socketId === socket.id) || {}
+      let guest = game.guests.find(guest => guest.socketId === socket.id) || {}
 
       console.log('\n\nNew user in channel: ', gameId)
       socket.join(gameId)
-      updateUsers(game, socket.id)
 
-      if(!game.guests.includes(socket.id)){
-        game.guests.push(socket.id)
+      if(!guest.socketId && !user.socketId){
+        guest = {
+          socketId: socket.id,
+          granted: false
+        }
+        game.guests.push(guest)
       }
+
+      if(game.isPublic) {
+        updateUsers(game, socket.id)
+      // The room is private and the user is not connected yet (guest)
+
+      } else if(guest.socketId) {
+        socket.emit('accessUpdate', guest.isGranted ? 'granted' : 'pending')
+      }
+
+      socket.on('userLogin', function(password){
+        if (password === game.password) {
+          const guest = game.guests.find(guest => guest.socketId === socket.id)
+          guest.isGranted = true
+          socket.emit('accessUpdate', 'granted')
+          updateUsers(game, socket.id)
+        } else {
+          socket.emit('accessUpdate', 'denied')
+        }
+      })
 
       socket.on('userConnect', function(userInfos){
         console.log('<== userConnect:', userInfos)
+        const guest = game.guests.find(guest => guest.socketId === socket.id)
+
+        if(!game.isPublic && !guest.isGranted) {
+          return
+        }
+
         const user = createUser(game, userInfos)
         const guestIndex = game.guests.findIndex(socketId => {
           socketId === user.socketId
