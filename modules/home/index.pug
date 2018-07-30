@@ -21,18 +21,26 @@ block content
 
     div(id="home-content")
       div(class="ui text container")
-        br
-        br
         h2(class="ui header custom-grey") 🏓 Play
         div(class="ui divider")
         h3(class="ui header custom-grey") Create a room
-        form(id="roomForm" action="")
+        form(id="roomForm" action="" method="post")
           div(class="ui action input")
-            input(id="roomId" type="text")
-            button(type="submit" class="ui primary button") Join
+            input(name="gameId" id="roomId" type="text")
+            select(name="status" class="ui compact selection dropdown")
+              option(selected="" value="public") Public
+              option(value="private") Private
+            button(type="submit" class="ui primary button") Create
 
-        h3(class="ui header custom-grey") Join a public room
-        p Coming soon...
+        h3(class="ui header custom-grey") Join a room
+        table(class="ui table")
+          thead
+            tr
+              th
+              th Name
+              th Players
+              th
+          tbody(id="roomList")
 
         h2(class="ui header custom-grey") 📕 Rules
         div(class="ui divider")

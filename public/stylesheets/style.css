@@ -18,6 +18,11 @@ body {
   align-items: center;
 }
 
+.private-key {
+  text-align: center;
+  color: #4b4f51;
+}
+
 #board-area {
   flex: 3
 }
@@ -41,6 +46,23 @@ body {
 
 #home-content {
   flex: auto;
+}
+
+.ui.table td.right {
+  text-align: right;
+}
+
+.ui.table thead tr th, .ui.table tr td {
+  text-align: center;
+}
+
+tr td .ui.button.join-button {
+  visibility: hidden;
+}
+
+
+tr:hover td .ui.button.join-button {
+  visibility: visible;
 }
 
 #title {

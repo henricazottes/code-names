@@ -1,0 +1,7 @@
+tr
+  td(class="collapsing private-key")!= isPublic ? '' : '<i class="fas fa-key"></i>'
+  td= roomId
+  td= userCounter
+  td(class="collapsing")
+    form(id="roomForm" action=`/game/${roomId}`)
+      button(type="submit" class="join-button ui primary button") Join

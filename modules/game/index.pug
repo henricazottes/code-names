@@ -4,6 +4,12 @@ block script
   script(src='/javascripts/game.js')
 
 block content
+  span(
+    id="infos"
+    gameId= gameId
+    status= status
+    style="display: none"
+  )
   div(id="winnerModal")
   div(id="flex-wrapper" style="height: 100%")
     div(id="teams" class="flex-column")

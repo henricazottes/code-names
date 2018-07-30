@@ -1,8 +1,14 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 
-router.get('/:id', function(req, res, next) {
-  res.render('game', { gameId: req.params.id });
-});
+router.get('/:id', function(req, res) {
+  res.render('game')
+})
 
-module.exports = router;
+router.post('/:id', function(req, res) {
+  res.render('game', { gameId: req.body.gameId, status: req.body.status })
+})
+
+
+
+module.exports = router

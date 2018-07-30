@@ -1,7 +1,19 @@
-
-
+import roomRow from './components/roomRow.pug'
 
 $( document ).ready(function() {
+
+  const socket = io()
+
+  socket.on('roomListUpdate', roomList => {
+    console.log('roomList update:', roomList)
+    $('#roomList').html('')
+    roomList.map(room => {
+      $('#roomList').append(roomRow({ ...room }))
+    })
+  })
+
+  $('.dropdown').dropdown()
+
   $('.item').click(function() {
     $('.item').removeClass('active')
     $('.tab').removeClass('active')

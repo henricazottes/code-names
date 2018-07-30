@@ -6,12 +6,13 @@ import winnerModal from './components/winnerModal.pug'
 import isEqual from 'lodash/isEqual'
 import ReactiveStore from '../../reactivestore.js'
 
-localStorage.debug = ''
-
-let storage = sessionStorage
-let local = JSON.parse(storage.getItem('local')) || {}
 
 $( document ).ready(function() {
+
+  localStorage.debug = ''
+
+  let storage = sessionStorage
+  let local = JSON.parse(storage.getItem('local')) || {}
 
   const storeInfos = infos => {
     Object.keys(infos).map(key => local[key] = infos[key])
@@ -23,9 +24,7 @@ $( document ).ready(function() {
     storage.setItem('local', {})
   }
 
-  let buffer = {}
-  $.extend(true, buffer, local)
-  const socket = io()
+  const socket = io({ query: { status: $('#infos').attr('status') } })
   const currentId = location.href.split('/').reverse()[0]
 
   if (local.id !== currentId) {
@@ -106,6 +105,19 @@ $( document ).ready(function() {
       $(`#${prefix}Join`).click()
     }
   }
+
+  store.connect(['user'], ({ store }) => {
+    switch (store.user.access) {
+      case 'pending':
+        // Display password prompt
+        break
+      case 'denied':
+        // Display denied message
+        break
+      case 'authorized':
+        break
+    }
+  })
 
   store.connect(['playing'], ({ store }) => {
     $('#actionButton').off('click')

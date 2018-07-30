@@ -181,6 +181,20 @@ module.exports = (io) => {
     }
   }
 
+  const updateRoomList = (socketId) => {
+    const roomList = Object.keys(games).map(gameId => ({
+      roomId: gameId,
+      userCounter: games[gameId].users.length,
+      isPublic: games[gameId].isPublic
+    }))
+    console.log('==> roomListUpdate', roomList)
+    if(socketId) {
+      io.to(socketId).emit('roomListUpdate', roomList)
+    } else {
+      io.emit('roomListUpdate', roomList)
+    }
+  }
+
   const updateWinner = (game, socketId) => {
     console.log('==> winnerUpdate', game.winner, game.playing)
     if(socketId) {
@@ -213,7 +227,7 @@ module.exports = (io) => {
     return newUser
   }
 
-  const newGame = (gameId) => {
+  const newGame = (gameId, isPublic) => {
     const firstTeam = pickFirstTeam()
     const cards = generateCards({ team: firstTeam })
     const shareableCards = cards.map(col => {
@@ -228,9 +242,11 @@ module.exports = (io) => {
 
     return {
       id: gameId,
+      isPublic,
       playing: false,
       turn: firstTeam,
       users: [],
+      guests: [],
       ready: [],
       teams: ['orange','blue'],
       winner: undefined,
@@ -240,8 +256,9 @@ module.exports = (io) => {
   }
 
   const restartedGame = game => {
-    const _game = newGame(game.id)
+    const _game = newGame(game.id, game.isPublic)
     _game.users = game.users
+    _game.guests = game.guests
     return _game
   }
 
@@ -251,102 +268,136 @@ module.exports = (io) => {
 
   io.on('connection', function(socket){
     const gameId = socket.handshake.headers.referer.split('/').reverse()[0]
+    console.log('Socket query:', socket.handshake.query)
+    const status = socket.handshake.query.status
 
-    if (!games[gameId]) {
-      games[gameId] = newGame(gameId)
-    }
+    if(gameId.length > 0) {
+      // In game
 
-    let game = games[gameId]
-    let user = {}
-
-    console.log('\n\nNew user in channel: ', gameId)
-    socket.join(gameId)
-    updateUsers(game, socket.id)
-
-    socket.on('userConnect', function(userInfos){
-      console.log('<== userConnect:', userInfos)
-      user = createUser(game, userInfos)
-      game.users.push(user)
-      updateUsers(game)
-      initialUpdate(game, user)
-    })
-
-
-    socket.on('disconnect', (reason) => {
-      console.log('<== disconnect:', reason, socket.id)
-      const userIndex = game.users.findIndex(user => user.socketId === socket.id)
-      if (userIndex >= 0 && game.users[userIndex].isOnline) {
-        game.users[userIndex].isOnline = false
-        io.to(gameId).emit('usersUpdate', game.users)
+      if (!games[gameId]) {
+        games[gameId] = newGame(gameId, status === 'public')
+        updateRoomList()
       }
-    })
 
+      let game = games[gameId]
+      let user = {}
 
-    socket.on('userReconnect', function(oldSocketId){
-      console.log('<== userReconnect:', oldSocketId)
-      const userIndex = game.users.findIndex(user => user.socketId === oldSocketId)
-      console.log('User index:', userIndex)
-      if (userIndex >= 0 && !game.users[userIndex].isOnline) {
-        user = game.users[userIndex]
-        game.users[userIndex].isOnline = true
-        game.users[userIndex].socketId = socket.id
+      console.log('\n\nNew user in channel: ', gameId)
+      socket.join(gameId)
+      updateUsers(game, socket.id)
+
+      if(!game.guests.includes(socket.id)){
+        game.guests.push(socket.id)
+      }
+
+      socket.on('userConnect', function(userInfos){
+        console.log('<== userConnect:', userInfos)
+        const user = createUser(game, userInfos)
+        const guestIndex = game.guests.findIndex(socketId => {
+          socketId === user.socketId
+        })
+
+        game.users.push(user)
+        game.guests.splice(guestIndex, 1)
+        updateUsers(game)
+        updateRoomList()
         initialUpdate(game, user)
-      }
-    })
+      })
 
 
-    socket.on('userChooseCard', function(cardName){
-      console.log('<== userChooseCard', cardName)
-      if (user.isCaptain){
-        return
-      }
-      const choosedCard = findCard(cardName, game)
-      if (user.team === game.turn && !choosedCard.isRevealed) {
-        user.choosedCard = choosedCard
-        if (isTurnOver(game)) { // all players choosed one card
-          updateShareableCards(choosedCard, game)
-          updateCards(game)
-          game.winner = checkWinner(choosedCard, game)
-          if(game.winner) {
-            updateWinner(game)
-            resetUserChoosedCard(game)
-            games[gameId] = restartedGame(game)
-            Object.assign(game, games[gameId])
-            game.users.map(user => initialUpdate(game, user))
-          } else if (choosedCard.team !== game.turn) {
-            game.turn = nextTeam(game)
-            updateTurn(game, 1000)
+      socket.on('disconnect', (reason) => {
+        console.log('<== disconnect:', reason, socket.id)
+        const userIndex = game.users.findIndex(user => user.socketId === socket.id)
+        if (userIndex >= 0) {
+          if(game.users[userIndex].isOnline) {
+            game.users[userIndex].isOnline = false
+            io.to(gameId).emit('usersUpdate', game.users)
+          }
+        } else {
+          const guestIndex = game.guests.findIndex(socketId => {
+            socketId === user.socketId
+          })
+          game.guests.splice(guestIndex, 1)
+        }
+        // All Users and Guests disconnected
+        if(game.users.findIndex(user => user.isOnline) < 0
+          && game.guests.length === 0) {
+          delete games[game.id]
+          updateRoomList()
+        }
+      })
+
+
+      socket.on('userReconnect', function(oldSocketId){
+        console.log('<== userReconnect:', oldSocketId)
+        const userIndex = game.users.findIndex(user => user.socketId === oldSocketId)
+        console.log('User index:', userIndex)
+        if (userIndex >= 0 && !game.users[userIndex].isOnline) {
+          user = game.users[userIndex]
+          game.users[userIndex].isOnline = true
+          game.users[userIndex].socketId = socket.id
+          initialUpdate(game, user)
+        }
+      })
+
+
+      socket.on('userChooseCard', function(cardName){
+        console.log('<== userChooseCard', cardName)
+        if (user.isCaptain){
+          return
+        }
+        const choosedCard = findCard(cardName, game)
+        if (user.team === game.turn && !choosedCard.isRevealed) {
+          user.choosedCard = choosedCard
+          if (isTurnOver(game)) { // all players choosed one card
+            updateShareableCards(choosedCard, game)
+            updateCards(game)
+            game.winner = checkWinner(choosedCard, game)
+            if(game.winner) {
+              updateWinner(game)
+              resetUserChoosedCard(game)
+              games[gameId] = restartedGame(game)
+              Object.assign(game, games[gameId])
+              game.users.map(user => initialUpdate(game, user))
+            } else if (choosedCard.team !== game.turn) {
+              game.turn = nextTeam(game)
+              updateTurn(game, 1000)
+            }
+          }
+          updateUser(game, user.socketId)
+          updateUsers(game)
+        }
+      })
+
+      socket.on('userReady', function() {
+        console.log('<== userReady')
+        if(!game.ready.includes(user.team)){
+          game.ready.push(user.team)
+          updateReady(game)
+          if(teamsAreReady(game)){
+            console.log('==? Start game')
+            game.playing = true
+            updatePlaying(game)
+            updateCards(game)
+            updateTurn(game)
           }
         }
-        updateUser(game, user.socketId)
-        updateUsers(game)
-      }
-    })
+      })
 
-    socket.on('userReady', function() {
-      console.log('<== userReady')
-      if(!game.ready.includes(user.team)){
-        game.ready.push(user.team)
-        updateReady(game)
-        if(teamsAreReady(game)){
-          console.log('==? Start game')
-          game.playing = true
-          updatePlaying(game)
-          updateCards(game)
+
+      socket.on('userEndTurn', function(){
+        console.log('<== userEndTurn')
+        if (user.team === game.turn && user.isCaptain) {
+          game.turn = nextTeam(game)
+          resetUserChoosedCard(game)
           updateTurn(game)
+          updateUsers(game)
         }
-      }
-    })
+      })
 
-
-    socket.on('userEndTurn', function(){
-      console.log('<== userEndTurn')
-      if (user.team === game.turn && user.isCaptain) {
-        game.turn = nextTeam(game)
-        resetUserChoosedCard(game)
-        updateTurn(game)
-        updateUsers(game)
-      }
-    })
+    } else {
+      // In lobby
+      updateRoomList(socket.id)
+    }
   })
 }
