@@ -86,12 +86,12 @@ tr:hover td .ui.button.join-button {
   justify-content: space-between;
 }
 
-#roomForm {
-  text-align: center;
-}
-
 .ui.header.custom-grey {
   color: rgb(75, 75, 75);
+}
+
+.ui.form .field > label.clear-grey {
+  color: #c8d6e5;
 }
 
 #left-header {

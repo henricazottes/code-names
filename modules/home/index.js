@@ -12,7 +12,20 @@ $( document ).ready(function() {
     })
   })
 
-  $('.dropdown').dropdown()
+  $('.dropdown').dropdown({
+    onChange: function(value) {
+      if(value === 'private') {
+        $('#password').prop('disabled', false)
+        $('#password').prop('required', true)
+        $('#passwordLabel').removeClass('clear-grey')
+      } else {
+        $('#password').prop('disabled', true)
+        $('#password').prop('required', false)
+        $('#passwordLabel').addClass('clear-grey')
+      }
+    }
+  })
+
 
   $('.item').click(function() {
     $('.item').removeClass('active')
@@ -20,7 +33,6 @@ $( document ).ready(function() {
     const className = $(this).attr('class').split(/\s+/).find(className => {
       return className.includes('-item')
     })
-    console.log('classname:', className)
     $(`.${className}`).addClass('active')
   })
 
@@ -29,7 +41,6 @@ $( document ).ready(function() {
   $('#roomForm').attr('action', `/game/${roomId}`)
 
   $('#roomId').on('input', function(){
-    console.log('roomid:')
     const roomId = $(this).val()
     $('#roomForm').attr('action', `/game/${roomId}`)
   })

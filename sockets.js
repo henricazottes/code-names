@@ -227,7 +227,7 @@ module.exports = (io) => {
     return newUser
   }
 
-  const newGame = (gameId, isPublic) => {
+  const newGame = (gameId, isPublic, password) => {
     const firstTeam = pickFirstTeam()
     const cards = generateCards({ team: firstTeam })
     const shareableCards = cards.map(col => {
@@ -243,6 +243,7 @@ module.exports = (io) => {
     return {
       id: gameId,
       isPublic,
+      password,
       playing: false,
       turn: firstTeam,
       users: [],
@@ -270,12 +271,13 @@ module.exports = (io) => {
     const gameId = socket.handshake.headers.referer.split('/').reverse()[0]
     console.log('Socket query:', socket.handshake.query)
     const status = socket.handshake.query.status
+    const password = socket.handshake.query.password
 
     if(gameId.length > 0) {
       // In game
 
       if (!games[gameId]) {
-        games[gameId] = newGame(gameId, status === 'public')
+        games[gameId] = newGame(gameId, status === 'public', password)
         updateRoomList()
       }
 

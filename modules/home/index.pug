@@ -24,13 +24,24 @@ block content
         h2(class="ui header custom-grey") 🏓 Play
         div(class="ui divider")
         h3(class="ui header custom-grey") Create a room
-        form(id="roomForm" action="" method="post")
-          div(class="ui action input")
-            input(name="gameId" id="roomId" type="text")
-            select(name="status" class="ui compact selection dropdown")
-              option(selected="" value="public") Public
-              option(value="private") Private
-            button(type="submit" class="ui primary button") Create
+        form(id="roomForm" class="ui form" action="" method="post")
+          div(class="fields")
+            div(class="six wide field")
+              label Name
+              input(name="gameId" id="roomId" type="text" required)
+            div(class="three wide field")
+              label Status
+              div(class="field")
+                select(name="status" class="ui compact selection dropdown")
+                  option(selected="" value="public") Public
+                  option(value="private") Private
+            div(class="seven wide field")
+              label(id="passwordLabel" class="clear-grey") Password
+              div(class="two fields")
+                div(class="ten wide field")
+                  input(name="password" id="password" type="password" disabled)
+                div(class="six wide field")
+                  button(type="submit" class="ui fluid primary button") Create
 
         h3(class="ui header custom-grey") Join a room
         table(class="ui table")

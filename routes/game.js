@@ -6,7 +6,11 @@ router.get('/:id', function(req, res) {
 })
 
 router.post('/:id', function(req, res) {
-  res.render('game', { gameId: req.body.gameId, status: req.body.status })
+  res.render('game', {
+    gameId: req.body.gameId,
+    status: req.body.status,
+    password: req.body.password || ''
+  })
 })
 
 

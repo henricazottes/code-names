@@ -24,7 +24,9 @@ $( document ).ready(function() {
     storage.setItem('local', {})
   }
 
-  const socket = io({ query: { status: $('#infos').attr('status') } })
+  const status = $('#infos').attr('status')
+  const password = $('#infos').attr('password')
+  const socket = io({ query: { status, password } })
   const currentId = location.href.split('/').reverse()[0]
 
   if (local.id !== currentId) {
