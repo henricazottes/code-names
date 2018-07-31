@@ -9,7 +9,7 @@ router.post('/:id', function(req, res) {
   res.render('game', {
     gameId: req.body.gameId,
     status: req.body.status,
-    password: req.body.password || ''
+    password: req.body.password
   })
 })
 

@@ -3,5 +3,5 @@ tr
   td= roomId
   td= userCounter
   td(class="collapsing")
-    form(id="roomForm" action=`/game/${roomId}`)
+    form(id="roomForm" action=`/game/${roomId}` method="post")
       button(type="submit" class="join-button ui primary button") Join

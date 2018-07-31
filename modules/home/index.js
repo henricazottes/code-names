@@ -1,4 +1,5 @@
 import roomRow from './components/roomRow.pug'
+import noRoomRow from './components/noRoomRow.pug'
 
 $( document ).ready(function() {
 
@@ -7,9 +8,14 @@ $( document ).ready(function() {
   socket.on('roomListUpdate', roomList => {
     console.log('roomList update:', roomList)
     $('#roomList').html('')
-    roomList.map(room => {
-      $('#roomList').append(roomRow({ ...room }))
-    })
+    console.log('Roomlist length', roomList.length)
+    if(roomList.length === 0) {
+      $('#roomList').append(noRoomRow())
+    } else {
+      roomList.map(room => {
+        $('#roomList').prepend(roomRow({ ...room }))
+      })
+    }
   })
 
   $('.dropdown').dropdown({
