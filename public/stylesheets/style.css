@@ -143,6 +143,14 @@ tr:hover td .ui.button.join-button {
   display: none;
 }
 
+#waitingMessage {
+  color: white;
+  font-size: 2em;
+  align-self: center;
+  text-align: center;
+  width: 100%;
+}
+
 .ui.card > .content {
   display: flex;
   flex-direction: column;

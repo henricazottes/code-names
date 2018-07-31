@@ -235,6 +235,9 @@ $( document ).ready(function() {
       cards: store.cards,
       isCaptain: store.user.isCaptain
     }))
+    if(store.cards.length > 0) {
+      $('#waitingMessage').hide()
+    }
     if (!prev.cards[0]
       || prev.cards[0][0].word.fr !== store.cards[0][0].word.fr) {
       $('.game-card').css('opacity', '0')
