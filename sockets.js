@@ -323,7 +323,7 @@ module.exports = (io) => {
           return
         }
 
-        const user = createUser(game, userInfos)
+        user = createUser(game, userInfos)
         const guestIndex = game.guests.findIndex(socketId => {
           socketId === user.socketId
         })
