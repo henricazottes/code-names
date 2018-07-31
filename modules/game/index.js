@@ -160,14 +160,19 @@ $( document ).ready(function() {
   store.connect(['messages'], ({ store }) => {
     $('#messages').empty()
     store.messages.map((message, i) => {
+      const differentUser = i === 0
+        || store.messages[i-1].socketId !== message.socketId
+
+      if(differentUser) {
+        $('#messages').append('<br/>')
+      }
+
       if(message.socketId === store.user.socketId){
         $('#messages').append(myMessage({ content: message.content }))
       } else {
         let username
-        if(i > 0 && store.messages[i-1].socketId !== message.socketId
-          || i === 0) {
+        if(differentUser){
           username = message.username
-          $('#messages').append('<br/>')
         }
         $('#messages').append(otherMessage({
           content: message.content,
