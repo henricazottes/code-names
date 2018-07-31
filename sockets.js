@@ -184,7 +184,7 @@ module.exports = (io) => {
   const updateRoomList = (socketId) => {
     const roomList = Object.keys(games).map(gameId => ({
       roomId: gameId,
-      userCounter: games[gameId].users.length,
+      userCounter: games[gameId].users.filter(user => user.isOnline).length,
       isPublic: games[gameId].isPublic
     }))
     console.log('==> roomListUpdate', roomList)
@@ -354,6 +354,7 @@ module.exports = (io) => {
           if(game.users[userIndex].isOnline) {
             game.users[userIndex].isOnline = false
             io.to(gameId).emit('usersUpdate', game.users)
+            updateRoomList()
           }
         } else {
           const guestIndex = game.guests.findIndex(socketId => {
