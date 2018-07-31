@@ -362,11 +362,13 @@ module.exports = (io) => {
           game.guests.splice(guestIndex, 1)
         }
         // All Users and Guests disconnected
-        if(game.users.findIndex(user => user.isOnline) < 0
-          && game.guests.length === 0) {
-          delete games[game.id]
-          updateRoomList()
-        }
+        setTimeout(() => {
+          if(game.users.findIndex(user => user.isOnline) < 0
+            && game.guests.length === 0) {
+            delete games[game.id]
+            updateRoomList()
+          }
+        }, 5000)
       })
 
 

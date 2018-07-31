@@ -2,7 +2,10 @@ var express = require('express')
 var router = express.Router()
 
 router.get('/:id', function(req, res) {
-  res.render('game')
+  res.render('game', {
+    gameId: req.params.gameId,
+    status: 'public'
+  })
 })
 
 router.post('/:id', function(req, res) {
@@ -12,7 +15,5 @@ router.post('/:id', function(req, res) {
     password: req.body.password
   })
 })
-
-
 
 module.exports = router
