@@ -2,6 +2,9 @@
 import nameLine from './components/nameLine.pug'
 import boardTemplate from './components/board.pug'
 import winnerModal from './components/winnerModal.pug'
+import otherMessage from './components/message.pug'
+import myMessage from './components/myMessage.pug'
+
 
 import isEqual from 'lodash/isEqual'
 import ReactiveStore from '../../reactivestore.js'
@@ -86,6 +89,10 @@ $( document ).ready(function() {
     access: {
       event: 'accessUpdate',
       default: undefined
+    },
+    messages: {
+      event: 'messagesUpdate',
+      default: []
     }
   })
 
@@ -105,10 +112,14 @@ $( document ).ready(function() {
     socket.emit('userConnect', user)
   }
 
-  const validOnEnterPressed = ({ inputSelector, buttonSelector }) => key => {
+  const execOnEnterPressed = ({ inputSelector, cb, limit = 15 }) => key => {
     const length = $(inputSelector).val().length
-    if(key.which === 13 && length > 0 && length < 15) {
-      $(buttonSelector).click()
+    console.log('key touched')
+    if(key.which === 13 && !key.shiftKey && length > 0 && length < limit) {
+      console.log('Enter pressed: ', $(inputSelector).val())
+      // $(buttonSelector).click()
+      key.preventDefault()
+      cb()
     }
   }
 
@@ -144,6 +155,26 @@ $( document ).ready(function() {
         socket.emit('userReady')
       })
     }
+  })
+
+  store.connect(['messages'], ({ store }) => {
+    $('#messages').empty()
+    store.messages.map((message, i) => {
+      if(message.socketId === store.user.socketId){
+        $('#messages').append(myMessage({ content: message.content }))
+      } else {
+        let username
+        if(i > 0 && store.messages[i-1].socketId !== message.socketId
+          || i === 0) {
+          username = message.username
+          $('#messages').append('<br/>')
+        }
+        $('#messages').append(otherMessage({
+          content: message.content,
+          username
+        }))
+      }
+    })
   })
 
   store.connect(['ready'], ({ store }) => {
@@ -279,8 +310,9 @@ $( document ).ready(function() {
 
   // Update selected card color
   store.connect(['user'], ({ prev, store }) => {
-    let toto = {}
-    $.extend(true, toto, store)
+    if(store.user.isOnline){
+      $('#messageInput').prop('disabled', false)
+    }
     if(store.user.isCaptain) {
       $('#action').show()
     } else {
@@ -304,15 +336,15 @@ $( document ).ready(function() {
 
   // Display inputs to join teams
   $('#blueJoin').click(getJoinHandler('blue'))
-  $('#blueNameInput').keypress(validOnEnterPressed({
+  $('#blueNameInput').keypress(execOnEnterPressed({
     inputSelector: '#blueNameInput',
-    buttonSelector: '#blueJoin'
+    cb: () => { $('#blueJoin').click() }
   }))
 
   $('#orangeJoin').click(getJoinHandler('orange'))
-  $('#orangeNameInput').keypress(validOnEnterPressed({
+  $('#orangeNameInput').keypress(execOnEnterPressed({
     inputSelector: '#orangeNameInput',
-    buttonSelector: '#orangeJoin'
+    cb: () => { $('#orangeJoin').click() }
   }))
 
   $('#passwordModal > div > button').on('click', function(){
@@ -320,9 +352,18 @@ $( document ).ready(function() {
     socket.emit('userLogin', $('#passwordModal > div > input').val())
   })
 
-  $('#passwordModal > div > input').keypress(validOnEnterPressed({
+  $('#passwordModal > div > input').keypress(execOnEnterPressed({
     inputSelector: '#passwordModal > div > input',
-    buttonSelector: '#passwordModal > div > button'
+    cb: () => { $('#passwordModal > div > button').click() }
+  }))
+
+  $('#messageInput').keypress(execOnEnterPressed({
+    inputSelector: '#messageInput',
+    limit: 2000,
+    cb: () => {
+      socket.emit('userMessage', $('#messageInput').val())
+      $('#messageInput').val('')
+    }
   }))
 })
 

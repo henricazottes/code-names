@@ -204,6 +204,15 @@ module.exports = (io) => {
     }
   }
 
+  const updateMessages = (game, socketId) => {
+    console.log('==> messagesUpdate', game.messages)
+    if(socketId) {
+      io.to(socketId).emit('messagesUpdate', game.messages)
+    } else {
+      io.to(game.id).emit('messagesUpdate', game.messages)
+    }
+  }
+
   const initialUpdate = (game, user) => {
     // Order is important
     updateUser(game, user.socketId)
@@ -211,6 +220,7 @@ module.exports = (io) => {
     updateWinner(game, user.socketId)
     updateReady(game, user.socketId)
     updatePlaying(game, user.socketId)
+    updateMessages(game, user.socketId)
     if(teamsAreReady(game)) {
       updateCards(game, user.socketId)
       updateTurn(game, user.socketId, 0)
@@ -252,6 +262,7 @@ module.exports = (io) => {
       teams: ['orange','blue'],
       winner: undefined,
       cards,
+      messages: [],
       shareableCards: shareableCards
     }
   }
@@ -368,6 +379,20 @@ module.exports = (io) => {
           game.users[userIndex].isOnline = true
           game.users[userIndex].socketId = socket.id
           initialUpdate(game, user)
+        }
+      })
+
+      socket.on('userMessage', function(content){
+        console.log('<== userMessage', content)
+        if(user.isOnline) {
+          console.log('Game messages:', game.messages)
+          game.messages.push({
+            username: user.name,
+            content,
+            socketId: user.socketId
+          })
+          console.log('Game messages:', game.messages)
+          updateMessages(game)
         }
       })
 

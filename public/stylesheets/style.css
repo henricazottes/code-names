@@ -13,9 +13,6 @@ body {
 #chat {
   flex: 1;
   max-width: 400px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #passwordModal {
@@ -142,24 +139,63 @@ tr:hover td .ui.button.join-button {
   align-items: center;
 }
 
-#teams {
+#inputArea {
+  display: none;
 }
 
-.team-column {
+.ui.card > .content {
+  display: flex;
+  flex-direction: column;
+}
+
+#messages {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  height: 0px;
+}
+
+.message {
+  margin-top: 2px;
+}
+
+.ui.card > .content > #messages > .message .username {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  color: #c8d6e5;
+}
+
+.message-content {
+  background-color: #eff6fe;
+  border-radius: 5px;
+  padding: 5px;
+  display: inline-block;
+}
+
+.my > .message-content {
+  background-color: #a29bfe;
+  color: white;
+}
+
+.my.message {
+  text-align: right;
+}
+
+
+.tall-column {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.team-card:first-child {
+.wide-card.bottom-margin {
   margin-bottom: 1rem;
 }
 
-.team-card {
+.wide-card {
   flex: 1;
 }
 
-.team-card > .card {
+.wide-card > .card {
   height: 100%;
   width: 100%;
 }
