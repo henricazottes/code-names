@@ -2,7 +2,7 @@
 
 # Code Names
 
-A web implementation of the great board game !
+A web implementation of the great board game!
 
 ## 📥 Install
 
