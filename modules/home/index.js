@@ -47,7 +47,7 @@ $( document ).ready(function() {
   $('#roomForm').attr('action', `/game/${roomId}`)
 
   $('#roomId').on('input', function(){
-    const roomId = $(this).val()
+    const roomId = $(this).val().replace(' ', '_')
     $('#roomForm').attr('action', `/game/${roomId}`)
   })
 })
