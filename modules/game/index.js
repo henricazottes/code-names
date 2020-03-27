@@ -103,20 +103,32 @@ $( document ).ready(function() {
     return team === 'blue' ? 'orange' : 'blue'
   }
 
-  const getJoinHandler = prefix => () => {
-    const name = $(`#${prefix}NameInput`).val()
-    const team = prefix === 'blue' ? 'blue' : 'orange'
-    $('.nameInputWrapper').hide()
-    const user = { name, socketId: socket.id, team }
-    console.log('==> userConnect', user)
-    socket.emit('userConnect', user)
+  function validName(name, limit) {
+    return  name.length > 0 && name.length < limit
   }
 
-  const execOnEnterPressed = ({ inputSelector, cb, limit = 15 }) => key => {
-    const length = $(inputSelector).val().length
+  const getJoinHandler = prefix => () => {
+    const input = $(`#${prefix}NameInput`)
+    const name = input.val()
+    const limit = input.attr('maxlength')
+
+    if (validName(name, limit)){
+      const team = prefix === 'blue' ? 'blue' : 'orange'
+      $('.nameInputWrapper').hide()
+      const user = { name, socketId: socket.id, team }
+      console.log('==> userConnect', user)
+      socket.emit('userConnect', user)
+    }
+  }
+
+  const execOnEnterPressed = ({ inputSelector, cb }) => key => {
+    const input = $(inputSelector)
+    const name = input.val()
+    const limit = input.attr('maxlength')
+
     console.log('key touched')
-    if(key.which === 13 && !key.shiftKey && length > 0 && length < limit) {
-      console.log('Enter pressed: ', $(inputSelector).val())
+    if(key.which === 13 && !key.shiftKey && validName(name, limit)) {
+      console.log('Enter pressed: ', name)
       // $(buttonSelector).click()
       key.preventDefault()
       cb()
