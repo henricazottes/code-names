@@ -40,10 +40,21 @@ body {
 #flex-wrapper {
   display: flex;
   height: 100%;
+  flex-direction: column;
 }
 
 #flex-wrapper.column {
   flex-flow: column;
+
+}
+
+#flex-wrapper .row {
+  display: flex;
+  flex-direction: row;
+}
+
+#flex-wrapper .grow {
+  flex-grow: 1;
 }
 
 #background-white {
@@ -224,8 +235,13 @@ tr:hover td .ui.button.join-button {
   margin-top: 1rem;
 }
 
+.stretched.row {
+  display: flex;
+  flex-grow: 1;
+}
+
 #actionButton {
-  width: 100%;
+  flex-grow: 1;
 }
 
 #start {

@@ -14,9 +14,13 @@ block content
   div(id="winnerModal")
   include components/passwordModal.pug
   div(id="flex-wrapper" style="height: 100%")
-    div(id="teams" class="flex-column")
-      include components/teams.pug
-    div(id="board-area" class="flex-column")
-      div(id="board")
-    div(id="chat" class="flex-column")
-      include components/chat.pug
+    div(class="row")
+      div(class="flex-column")
+        a(href="/" style="color: white; font-weight: bold;") < Back Home
+    div(class="row grow")
+      div(id="teams" class="flex-column")
+        include components/teams.pug
+      div(id="board-area" class="flex-column")
+        div(id="board")
+      div(id="chat" class="flex-column")
+        include components/chat.pug
