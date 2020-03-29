@@ -9,6 +9,10 @@ import myMessage from './components/myMessage.pug'
 import isEqual from 'lodash/isEqual'
 import ReactiveStore from '../../reactivestore.js'
 
+window.addEventListener('resize', function(){
+  const messages = document.getElementById('messages')
+  messages.scroll(0,messages.scrollHeight)
+})
 
 $( document ).ready(function() {
 
@@ -187,6 +191,8 @@ $( document ).ready(function() {
         }))
       }
     })
+    const messages = document.getElementById('messages')
+    messages.scroll(0,messages.scrollHeight)
   })
 
   store.connect(['ready'], ({ store }) => {
