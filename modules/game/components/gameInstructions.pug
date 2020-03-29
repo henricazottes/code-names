@@ -25,7 +25,7 @@ div(id="waitingMessage")
             h2 Game setup
             ol
                 li  Share this link to friends: 
-                    a(id="gameLink" href=`${window.location.href}`)= `${window.location.href} 📋`
+                    a(id="gameLink" href=`${decodeURI(window.location.href)}`)= `${decodeURI(window.location.href)} 📋`
                 li Chose a team, enter a name and click <b><u>Join</b></u>. First to join is the leader ⭐.
                 li When your team is ready, click <b><u>Ready</u></b>
             p Game starts when both teams are ready.

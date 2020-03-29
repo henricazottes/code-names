@@ -2,15 +2,14 @@ var express = require('express')
 var router = express.Router()
 
 router.get('/:id', function(req, res) {
-  if(req.originalUrl.includes('?fbclid=')) {
-    const cleanUrl = decodeURI(req.originalUrl)
-      .replace(/\?fbclid=.+/g, '')
-      .replace(/ /g, '_')
+  const cleanUrl = req.originalUrl.replace(/\?fbclid=.+/g, '')
+
+  if (req.originalUrl !== cleanUrl) {
     return res.redirect(cleanUrl)
   } else {
     res.render('game', {
       gameId: req.params.gameId,
-      status: 'public'
+      status: 'public',
     })
   }
 })
@@ -19,7 +18,7 @@ router.post('/:id', function(req, res) {
   res.render('game', {
     gameId: req.body.gameId,
     status: req.body.status,
-    password: req.body.password
+    password: req.body.password,
   })
 })
 

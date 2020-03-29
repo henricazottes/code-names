@@ -194,7 +194,7 @@ module.exports = (io) => {
 
   const updateRoomList = (socketId) => {
     const roomList = Object.keys(games).map(gameId => ({
-      roomId: gameId,
+      roomId: decodeURI(gameId),
       userCounter: games[gameId].users.filter(user => user.isOnline).length,
       isPublic: games[gameId].isPublic
     }))
