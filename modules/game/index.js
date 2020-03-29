@@ -124,7 +124,6 @@ $( document ).ready(function() {
   const execOnEnterPressed = ({ cb }) => key => {
     console.log('key touched')
     if(key.which === 13 && !key.shiftKey) {
-      console.log('Enter pressed: ', name)
       // $(buttonSelector).click()
       key.preventDefault()
       cb()
