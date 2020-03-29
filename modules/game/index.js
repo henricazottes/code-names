@@ -104,7 +104,7 @@ $( document ).ready(function() {
   }
 
   function validName(name, limit) {
-    return  name.length > 0 && name.length < limit
+    return  name.length > 0 && name.length <= limit
   }
 
   const getJoinHandler = prefix => () => {
@@ -121,12 +121,9 @@ $( document ).ready(function() {
     }
   }
 
-  const execOnEnterPressed = ({ inputSelector, cb }) => key => {
-    const input = $(inputSelector)
-    const name = input.val()
-    const limit = input.attr('maxlength')
+  const execOnEnterPressed = ({ cb }) => key => {
     console.log('key touched')
-    if(key.which === 13 && !key.shiftKey && validName(name, limit)) {
+    if(key.which === 13 && !key.shiftKey) {
       console.log('Enter pressed: ', name)
       // $(buttonSelector).click()
       key.preventDefault()
