@@ -125,7 +125,6 @@ $( document ).ready(function() {
     const input = $(inputSelector)
     const name = input.val()
     const limit = input.attr('maxlength')
-
     console.log('key touched')
     if(key.which === 13 && !key.shiftKey && validName(name, limit)) {
       console.log('Enter pressed: ', name)
