@@ -6,6 +6,17 @@ const words   = require('./words')
 
 const games = {}
 
+// User schema
+// {
+//   socketId,
+//   name,
+//   team,
+//   choosedCard,
+//   isCaptain,
+//   isOnline,
+//   isGranted,
+// }
+
 module.exports = (io) => {
 
   /**
@@ -237,6 +248,14 @@ module.exports = (io) => {
     return newUser
   }
 
+  const kickUser = (game, socketId) => {
+    const kickedUser = game.users.find(user => user.socketId == socketId)
+    game.users = game.users.filter(user => user.socketId != socketId)
+    Object.keys(kickedUser).forEach(key => {
+      kickUser[key] = undefined
+    })
+  }
+
   const newGame = (gameId, isPublic, password) => {
     const firstTeam = pickFirstTeam()
     const cards = generateCards({ team: firstTeam })
@@ -450,6 +469,15 @@ module.exports = (io) => {
           game.turn = nextTeam(game)
           resetUserChoosedCard(game)
           updateTurn(game)
+          updateUsers(game)
+        }
+      })
+
+      socket.on('userKickUser', function(kickedUserSocketId){
+        console.log('<== userKickUser')
+        if(user.isCaptain && kickedUserSocketId !== user.socketId) {
+          kickUser(game, kickedUserSocketId)
+          updateUser(game, kickedUserSocketId)
           updateUsers(game)
         }
       })

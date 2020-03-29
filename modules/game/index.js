@@ -32,7 +32,7 @@ $( document ).ready(function() {
   const socket = io({ query: { status, password } })
   const currentId = location.href.split('/').reverse()[0]
 
-  if (local.id !== currentId) {
+  if (local.id !== currentId || !local.store.user ) {
     console.log('Diffrent ID')
     clearInfos()
     storeInfos({ store: {}, id: currentId })
@@ -313,19 +313,44 @@ $( document ).ready(function() {
   store.connect(['users'], ({ store }) => {
     $('#blueTeam').empty()
     $('#orangeTeam').empty()
+    const currentUser = store.user
     store.users.map(user => {
       const userLine = nameLine({
         name: user.name,
-        me: user.socketId === store.user.socketId,
+        me: user.socketId === store.user && store.socketId,
         isOnline: user.isOnline,
-        isCaptain: user.isCaptain
+        isCaptain: user.isCaptain,
+        socketId: user.socketId,
+        showActions: currentUser
+          ? (
+            currentUser.isCaptain
+          && currentUser.team == user.team
+          && currentUser.socketId !== user.socketId
+          )
+          : false,
       })
       $(`#${user.team}Team`).append(userLine)
+    })
+    $('.item > .actions > button').click(function() {
+      console.log('Button:', this)
+      const action = $(this).attr('class')
+      const socketId = $(this).parent().data('socketid')
+      console.log(`==> ${action}`, socketId)
+      socket.emit(action, socketId)
     })
   })
 
   // Update selected card color
   store.connect(['user'], ({ prev, store }) => {
+    if (!store.user) {
+      const kickMessage = document.createElement('p')
+      kickMessage.textContent = 'You\'ve been kicked.'
+      $('#genericModal').empty()
+      $('#genericModal').append(kickMessage)
+      $('#genericModal').modal({closable: true}).modal('show')
+      return
+    }
+
     if(store.user.isOnline){
       $('#messageInput').prop('disabled', false)
     }

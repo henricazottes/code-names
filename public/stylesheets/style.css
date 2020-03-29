@@ -319,3 +319,32 @@ a {
   background-color: #2d3436;
   color: white;
 }
+
+.description > div.color-team > div.item {
+  display: flex;
+  justify-content: space-between;
+  cursor: auto;
+}
+.description > div.color-team > div.item::after {
+  display: none;
+  content: none;
+}
+
+.color-team > .item > div {
+  display: inline-block;
+}
+
+.actions > button {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  display: none;
+}
+
+.item:hover > .actions > button {
+  display: inline-block;
+}
+
+#genericModal {
+  padding: 1em;
+}

@@ -3,3 +3,6 @@ div(class="item")
     = ` ${name} `
     if isCaptain
       i(class="fas fa-star" style="color: #fdcb6e")
+  if showActions
+    div(class="actions"  data-socketid=socketId)
+      button(class="userKickUser") ❌
