@@ -1,7 +1,7 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: #4b4f51;
-  background-color: #a29bfe;
+  background-color: #4e47b0;
 }
 
 #teams {
@@ -21,7 +21,7 @@ body {
 
 #errorMessage {
   display: none;
-  color: #ff7675;
+  color: #fd4645;
 }
 
 .private-key {
@@ -30,7 +30,7 @@ body {
 }
 
 #board-area {
-  flex: 3
+  flex: 3;
 }
 
 .flex-column {
@@ -45,7 +45,6 @@ body {
 
 #flex-wrapper.column {
   flex-flow: column;
-
 }
 
 #flex-wrapper .row {
@@ -69,14 +68,14 @@ body {
   text-align: right;
 }
 
-.ui.table thead tr th, .ui.table tr td {
+.ui.table thead tr th,
+.ui.table tr td {
   text-align: center;
 }
 
 tr td .ui.button.join-button {
   visibility: hidden;
 }
-
 
 tr:hover td .ui.button.join-button {
   visibility: visible;
@@ -113,7 +112,8 @@ tr:hover td .ui.button.join-button {
   justify-content: flex-end;
 }
 
-#header, #footer {
+#header,
+#footer {
   flex: initial;
 }
 
@@ -123,7 +123,7 @@ tr:hover td .ui.button.join-button {
 }
 
 #board-area {
-  background-color: #bfbaff;
+  background-color: #322d82;
   border-radius: 5px;
   padding: 1%;
 }
@@ -132,7 +132,8 @@ tr:hover td .ui.button.join-button {
   display: none;
 }
 
-#board, #board > div {
+#board,
+#board > div {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -156,9 +157,8 @@ tr:hover td .ui.button.join-button {
 
 #waitingMessage {
   color: white;
-  font-size: 2em;
+  font-size: 1.3em;
   align-self: center;
-  text-align: center;
   width: 100%;
 }
 
@@ -190,15 +190,18 @@ tr:hover td .ui.button.join-button {
   display: inline-block;
 }
 
+.message-content > p {
+  line-height: 1em;
+}
+
 .my > .message-content {
-  background-color: #a29bfe;
+  background-color: #6a61db;
   color: white;
 }
 
 .my.message {
   text-align: right;
 }
-
 
 .tall-column {
   height: 100%;
@@ -251,8 +254,12 @@ tr:hover td .ui.button.join-button {
   justify-content: center;
 }
 
+a:hover {
+  color: #4e47b0;
+}
+
 a {
-  color: #00B7FF;
+  color: #00b7ff;
 }
 
 .game-card {
@@ -268,25 +275,25 @@ a {
 }
 
 .blue-team {
-  color: #74b9ff;
+  color: #2892fd;
   width: 100%;
 }
 
 .orange-team {
-  color: #ff7675;
+  color: #fd4645;
   width: 100%;
 }
 
 .blue-card.captain {
-  color: #74b9ff;
+  color: #2892fd;
 }
 
 .orange-card.captain {
-  color: #ff7675;
+  color: #fd4645;
 }
 
 .witness-card.captain {
-  color: #fdcb6e;
+  color: #ffac10;
 }
 
 .looser-card.captain {
@@ -294,17 +301,17 @@ a {
 }
 
 .blue-card.revealed {
-  background-color: #74b9ff;
+  background-color: #2892fd;
   color: white;
 }
 
 .orange-card.revealed {
-  background-color: #ff7675;
+  background-color: #fd4645;
   color: white;
 }
 
 .witness-card.revealed {
-  background-color: #fdcb6e;
+  background-color: #ffac10;
   color: white;
 }
 
