@@ -10,6 +10,7 @@ router.get('/:id', function(req, res) {
     res.render('game', {
       gameId: req.params.gameId,
       status: 'public',
+      title: 'CodeNames',
     })
   }
 })
@@ -19,6 +20,7 @@ router.post('/:id', function(req, res) {
     gameId: req.body.gameId,
     status: req.body.status,
     password: req.body.password,
+    title: 'CodeNames',
   })
 })
 
