@@ -1,0 +1,20 @@
+div(id="waitingMessage")
+    p Waiting players...
+    div(style="text-align: left;")
+        h1 How to play?
+        p
+            | The goal is to make your teammates find all your cards. As the leader () you can see cards color, but they can't. To do so, you can only say one and only one word as a hint, and the number of cards you refer to. (You can't use a word present on the board, or with the same root). Then your teammates select a card
+            | There are 4 types of cards:
+            ul
+                li <b><u>Red</u></b> cards belongs to Orange team
+                li <b><u>Blue</u></b> cards belongs to Blue team
+                li <b><u>Yellow</u></b> cards is neutral, chosing it will end your turn
+                li <b><u>Black</u></b> cards is forbidden, chosing it will make you lose!
+        h1 Game setup
+        ol(style="text-align: left;")
+            li  Share this link to friends: 
+                a(id="gameLink" href=`${window.location.href}`)= `${window.location.href} 📋`
+            li Chose a team, enter a name and click <b><u>Join</b></u>
+            | (⭐ means you'll make people guess the cards)
+            li When your team is ready, click <b><u>Ready</u></b>
+        p Game starts when both teams are ready.
