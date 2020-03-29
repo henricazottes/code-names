@@ -398,6 +398,12 @@ module.exports = (io) => {
         console.log('User index:', userIndex)
         if (userIndex >= 0 && !game.users[userIndex].isOnline) {
           user = game.users[userIndex]
+          game.messages = game.messages.map(message => {
+            if (message.socketId === user.socketId) {
+              message.socketId = socket.id
+            }
+            return message
+          })
           game.users[userIndex].isOnline = true
           game.users[userIndex].socketId = socket.id
           initialUpdate(game, user)
