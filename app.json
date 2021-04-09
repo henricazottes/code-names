@@ -4,6 +4,7 @@
   "logo": "https://i72.servimg.com/u/f72/13/84/06/30/logo11.png",
   "repository": "https://github.com/henricazottes/code-names.git",
   "success_url": "/",
+  "stack": "heroku-20",
   "formation": {
     "web": {
       "quantity": 1,
